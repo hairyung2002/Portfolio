@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #07080a;
+  --surface: #0d0f12;
+  --surface-2: #14171b;
+
+  --ink: #e9ebec;
+  --ink-muted: #868c91;
+  --metal: #b6babe;
+  --metal-dim: #33373c;
+  --border: #23262b;
+
+  --accent: #c7a876;
+  --accent-soft: #1e1810;
+
+  --status-active: #8fae96;
+  --status-active-bg: #15201a;
+  --status-ended: #7d8186;
+  --status-ended-bg: #1b1d20;
+  --status-building: #b99b6b;
+  --status-building-bg: #241c10;
+  --status-design: #7c8ca3;
+  --status-design-bg: #171b22;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-metal: var(--metal);
+  --color-metal-dim: var(--metal-dim);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-status-active: var(--status-active);
+  --color-status-active-bg: var(--status-active-bg);
+  --color-status-ended: var(--status-ended);
+  --color-status-ended-bg: var(--status-ended-bg);
+  --color-status-building: var(--status-building);
+  --color-status-building-bg: var(--status-building-bg);
+  --color-status-design: var(--status-design);
+  --color-status-design-bg: var(--status-design-bg);
+
+  --font-display: var(--font-plex-kr), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-curtain: curtain-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-scan: scan-sweep 1.1s cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-sheen: card-sheen 1s cubic-bezier(0.4, 0, 0.2, 1);
+  --animate-stat-flash: stat-flash 0.9s ease-out;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes curtain-reveal {
+  from {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(48px) scale(1.02);
+    clip-path: inset(0 0 100% 0);
+  }
+  55% {
+    filter: blur(4px);
+    clip-path: inset(0 0 0% 0);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+    clip-path: inset(0 0 0% 0);
+  }
+}
+
+@keyframes card-sheen {
+  0% {
+    transform: translateX(-60%) skewX(-18deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(180%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes stat-flash {
+  0% {
+    text-shadow: 0 0 0 transparent;
+  }
+  35% {
+    text-shadow: 0 0 24px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+@keyframes scan-sweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes scan-reveal {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Instrument-panel corner registration marks — used instead of plain hairline dividers */
+@layer utilities {
+  .corner-marks {
+    position: relative;
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim));
+    background-size:
+      10px 1px,
+      1px 10px,
+      10px 1px,
+      1px 10px,
+      10px 1px,
+      1px 10px,
+      10px 1px,
+      1px 10px;
+    background-position:
+      top left,
+      top left,
+      top right,
+      top right,
+      bottom left,
+      bottom left,
+      bottom right,
+      bottom right;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}

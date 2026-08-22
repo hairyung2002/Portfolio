@@ -19,7 +19,9 @@ export function Hero() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const section = sectionRef.current;
     const light = lightRef.current;
     const content = contentRef.current;
@@ -30,11 +32,18 @@ export function Hero() {
     if (!reduceMotion && light) {
       const handleMove = (e: MouseEvent) => {
         const rect = section.getBoundingClientRect();
-        light.style.setProperty("--px", `${((e.clientX - rect.left) / rect.width) * 100}%`);
-        light.style.setProperty("--py", `${((e.clientY - rect.top) / rect.height) * 100}%`);
+        light.style.setProperty(
+          "--px",
+          `${((e.clientX - rect.left) / rect.width) * 100}%`,
+        );
+        light.style.setProperty(
+          "--py",
+          `${((e.clientY - rect.top) / rect.height) * 100}%`,
+        );
       };
       section.addEventListener("mousemove", handleMove);
-      cleanupPointer = () => section.removeEventListener("mousemove", handleMove);
+      cleanupPointer = () =>
+        section.removeEventListener("mousemove", handleMove);
     }
 
     let trigger: ScrollTrigger | undefined;
@@ -62,7 +71,10 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden border-b border-border">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-border"
+    >
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div
           ref={gridRef}
@@ -93,8 +105,16 @@ export function Hero() {
         </div>
 
         <h1 className="max-w-3xl text-[clamp(2.6rem,7.5vw,5.25rem)] leading-[1.05] font-bold tracking-tight text-ink">
-          <MagneticText text="운영되는 시스템을" delay={150} className="block" />
-          <MagneticText text="다루는 엔지니어." delay={550} className="block text-metal" />
+          <MagneticText
+            text="유저에게 가치를 제공하는"
+            delay={150}
+            className="block"
+          />
+          <MagneticText
+            text="웹 풀스택 개발자"
+            delay={550}
+            className="block text-metal"
+          />
         </h1>
 
         <p className="animate-fade-up max-w-[52ch] text-[15px] leading-relaxed text-ink-muted [animation-delay:950ms] sm:text-base">
@@ -104,22 +124,37 @@ export function Hero() {
         <div className="animate-fade-up flex flex-wrap items-center justify-between gap-6 pt-4 [animation-delay:1050ms]">
           <div className="flex flex-wrap gap-5 font-mono text-[13px]">
             <Magnetic strength={12}>
-              <a href={profile.contact.github} target="_blank" rel="noopener noreferrer" className="text-ink transition-colors hover:text-metal">
+              <a
+                href={profile.contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink transition-colors hover:text-metal"
+              >
                 GitHub ↗
               </a>
             </Magnetic>
             <Magnetic strength={12}>
-              <a href={profile.contact.blog} target="_blank" rel="noopener noreferrer" className="text-ink transition-colors hover:text-metal">
+              <a
+                href={profile.contact.blog}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink transition-colors hover:text-metal"
+              >
                 velog ↗
               </a>
             </Magnetic>
             <Magnetic strength={12}>
-              <a href={`mailto:${profile.contact.email}`} className="text-ink transition-colors hover:text-metal">
+              <a
+                href={`mailto:${profile.contact.email}`}
+                className="text-ink transition-colors hover:text-metal"
+              >
                 {profile.contact.email}
               </a>
             </Magnetic>
           </div>
-          <span className="font-mono text-[11px] tracking-widest text-ink-muted uppercase">↓ Scroll</span>
+          <span className="font-mono text-[11px] tracking-widest text-ink-muted uppercase">
+            ↓ Scroll
+          </span>
         </div>
       </div>
     </section>

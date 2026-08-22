@@ -14,8 +14,9 @@ export interface SpeakingEngagement {
 export const profile = {
   name: "곽도윤",
   role: "Backend-leaning Full-stack Engineer",
-  tagline: "운영되는 시스템을 다루는 엔지니어",
-  intro: "사용자에게 새로운 가치를 제공하는 서비스 개발자",
+  tagline: "사용자에게 새로운 가치를 제공하는 서비스 개발자",
+  intro:
+    "안녕하세요. 웹 풀스택 엔지니어 곽도윤입니다.\n 시스템을 기반으로 웹 서비스를 개발하며, 사용자에게 새로운 가치를 제공하는 것을 목표로 합니다.",
   contact: {
     email: "kdoing2002@gmail.com",
     github: "https://github.com/hairyung2002",

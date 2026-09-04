@@ -16,7 +16,7 @@
 
   --status-active: #8fae96;
   --status-active-bg: #15201a;
-  --status-ended: #7d8186;
+  --status-ended: #9aa0a5;
   --status-ended-bg: #1b1d20;
   --status-building: #b99b6b;
   --status-building-bg: #241c10;
@@ -53,6 +53,7 @@
   --animate-scan: scan-sweep 1.1s cubic-bezier(0.65, 0, 0.35, 1) both;
   --animate-sheen: card-sheen 1s cubic-bezier(0.4, 0, 0.2, 1);
   --animate-stat-flash: stat-flash 0.9s ease-out;
+  --animate-specular-sweep: specular-sweep 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both;
 }
 
 @keyframes fade-up {
@@ -156,6 +157,9 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-display);
+  /* Korean: never break inside a word/eojeol; only wrap long latin/URL tokens */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -215,5 +219,69 @@ body {
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Instrument-panel side rails — thin vertical hairlines at a column's edges */
+  .rail-x {
+    position: relative;
+  }
+  .rail-x::before,
+  .rail-x::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--metal-dim) 12%,
+      var(--metal-dim) 88%,
+      transparent
+    );
+    pointer-events: none;
+  }
+  .rail-x::before {
+    left: 0;
+  }
+  .rail-x::after {
+    right: 0;
+  }
+
+  /* Short registration ticks on a top/bottom edge */
+  .edge-ticks {
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(var(--metal-dim), var(--metal-dim)),
+      linear-gradient(var(--metal-dim), var(--metal-dim));
+    background-size:
+      1px 8px,
+      1px 8px;
+    background-position:
+      left top,
+      right top;
+  }
+}
+
+@keyframes specular-sweep {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
+@keyframes line-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

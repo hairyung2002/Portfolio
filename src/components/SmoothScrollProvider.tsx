@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,6 +16,9 @@ if (typeof window !== "undefined") {
  * Fully inert under prefers-reduced-motion (native scroll, no GSAP ticker).
  */
 export function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -23,6 +27,7 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
       duration: 1.1,
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -35,8 +40,27 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  // On route change the new page has a different height. Reset to the top and
+  // tell Lenis / ScrollTrigger the document was remeasured — otherwise Lenis
+  // keeps the previous page's scroll limit and lets you scroll into empty space.
+  useEffect(() => {
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    const id = requestAnimationFrame(() => {
+      lenis?.resize();
+      ScrollTrigger.refresh();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [pathname]);
 
   return <>{children}</>;
 }

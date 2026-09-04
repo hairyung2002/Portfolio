@@ -1,15 +1,16 @@
 "use client";
 
-import { useRef, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, type MouseEvent, type ReactNode } from "react";
 
 export function Magnetic({ children, strength = 8, className = "" }: { children: ReactNode; strength?: number; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduceMotion = useRef(false);
 
+  useEffect(() => {
+    reduceMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
   function handleMove(e: MouseEvent<HTMLSpanElement>) {
-    if (typeof window !== "undefined") {
-      reduceMotion.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    }
     if (reduceMotion.current) return;
     const el = ref.current;
     if (!el) return;

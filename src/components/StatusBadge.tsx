@@ -10,7 +10,7 @@ const STATUS_STYLES: Record<ProjectStatus, string> = {
 export function StatusBadge({ status, className = "" }: { status: ProjectStatus; className?: string }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 border px-2 py-0.5 font-mono text-[11px] tracking-wide uppercase ${STATUS_STYLES[status]} ${className}`}
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap border px-2 py-1 text-[12px] leading-none font-medium ${STATUS_STYLES[status]} ${className}`}
     >
       <span aria-hidden="true" className="relative flex h-1.5 w-1.5">
         {status === "운영 중" && (

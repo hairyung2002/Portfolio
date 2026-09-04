@@ -51,13 +51,13 @@ export default async function ProjectDetailPage({
           </Link>
           <div className="flex flex-wrap items-center gap-3">
             <StatusBadge status={project.status} />
-            <span className="font-mono text-[11px] text-ink-muted">{project.period}</span>
+            <span className="text-[12px] text-ink-muted">{project.period}</span>
           </div>
           <div>
             <h1 className="text-3xl font-bold text-balance text-ink sm:text-4xl">{project.name}</h1>
             <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ink-muted">{project.oneLiner}</p>
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[13px] text-ink-muted">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px] leading-relaxed text-ink-muted">
             <span>{project.myRole}</span>
             {project.teamSize && (
               <>
@@ -98,7 +98,7 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-2 px-6 py-14 sm:py-16">
+      <div className="rail-x mx-auto flex w-full max-w-3xl flex-col gap-2 px-6 py-14 sm:py-16">
         <Section title="Problem" index={1} first>
           <ProseText text={project.problem} />
         </Section>

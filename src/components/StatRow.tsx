@@ -9,12 +9,18 @@ export interface Stat {
 }
 
 function CountingValue({ value }: { value: string }) {
-  const match = value.match(/^([\d,]+)(.*)$/);
+  // Only count up when the value is a number with an optional trailing token
+  // (e.g. "10,000+"). Anything else renders as-is.
+  const match = value.match(/^([\d,]+)(\D*)$/);
+  const isNumeric = match !== null;
+  // Only animate figures big enough for the count-up to read as motion.
+  const shouldCount =
+    match !== null && Number(match[1].replace(/,/g, "")) >= 100;
   const ref = useRef<HTMLParagraphElement>(null);
-  const [display, setDisplay] = useState(match ? "0" + match[2] : value);
+  const [display, setDisplay] = useState(shouldCount ? "0" : value);
 
   useEffect(() => {
-    if (!match) return;
+    if (!match || !shouldCount) return;
     const el = ref.current;
     if (!el) return;
 
@@ -38,7 +44,11 @@ function CountingValue({ value }: { value: string }) {
           const progress = Math.min((now - start) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
           const current = Math.round(target * eased);
-          setDisplay(current.toLocaleString("en-US") + suffix);
+          // Append the suffix ("+", "회" …) only once the count has landed,
+          // so mid-animation never reads as an oddly specific figure.
+          setDisplay(
+            current.toLocaleString("en-US") + (progress === 1 ? suffix : "")
+          );
           if (progress < 1) {
             requestAnimationFrame(tick);
           } else {
@@ -55,7 +65,14 @@ function CountingValue({ value }: { value: string }) {
   }, [value]);
 
   return (
-    <p ref={ref} className="font-mono text-[28px] leading-none font-bold tracking-tight text-ink tabular-nums sm:text-[34px]">
+    <p
+      ref={ref}
+      className={`leading-none font-bold tracking-tight tabular-nums ${
+        isNumeric
+          ? "font-mono text-[28px] text-ink sm:text-[34px]"
+          : "text-[22px] text-metal sm:text-[26px]"
+      }`}
+    >
       {display}
     </p>
   );

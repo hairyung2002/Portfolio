@@ -16,10 +16,10 @@ export function OutcomeList({ items }: { items: OutcomeItem[] }) {
           <span className="flex flex-1 flex-wrap items-center gap-x-2 gap-y-1">
             <span className={item.verified ? "text-ink" : "text-ink-muted"}>{item.label}</span>
             <span
-              className={`border px-1.5 py-0.5 font-mono text-[10px] tracking-wide uppercase ${
+              className={`whitespace-nowrap border px-1.5 py-0.5 text-[10.5px] ${
                 item.verified
-                  ? "border-status-active/30 bg-status-active-bg text-status-active"
-                  : "border-status-design/30 bg-status-design-bg text-status-design"
+                  ? "border-status-active/30 bg-status-active-bg font-mono tracking-wide text-status-active uppercase"
+                  : "border-status-design/30 bg-status-design-bg font-medium text-status-design"
               }`}
             >
               {item.verified ? "Verified" : (item.note ?? "설계 의도 · 미검증")}

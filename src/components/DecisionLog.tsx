@@ -2,17 +2,26 @@ import type { ProjectDecision } from "@/content/projects/types";
 
 function FlowArrow() {
   return (
-    <div aria-hidden="true" className="flex justify-center py-1 font-mono text-xs text-ink-muted">
-      ↓
+    <div aria-hidden="true" className="flex flex-col items-start py-1.5 pl-1">
+      <span className="h-4 w-px bg-metal-dim" />
+      <span className="-mt-[3px] text-[10px] leading-none text-metal-dim">▼</span>
     </div>
   );
 }
 
-function DecisionBlock({ decision, index }: { decision: ProjectDecision; index: number }) {
+function DecisionBlock({
+  decision,
+  index,
+  defaultOpen = false,
+}: {
+  decision: ProjectDecision;
+  index: number;
+  defaultOpen?: boolean;
+}) {
   const summaryLine = decision.result.split("\n\n")[0];
 
   return (
-    <details className="group corner-marks border border-border bg-surface">
+    <details open={defaultOpen} className="group corner-marks border border-border bg-surface">
       <summary
         className="flex cursor-pointer list-none items-start gap-3 bg-surface-2 px-5 py-3.5 transition-colors duration-150 hover:bg-surface-2/70 [&::-webkit-details-marker]:hidden"
       >
@@ -82,7 +91,7 @@ export function DecisionLog({ decisions }: { decisions: ProjectDecision[] }) {
   return (
     <div className="flex flex-col gap-6">
       {decisions.map((decision, i) => (
-        <DecisionBlock key={decision.title} decision={decision} index={i} />
+        <DecisionBlock key={decision.title} decision={decision} index={i} defaultOpen={i === 0} />
       ))}
     </div>
   );

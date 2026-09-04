@@ -16,17 +16,24 @@ export default function Home() {
     <div className="flex flex-col">
       <Hero />
 
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-20 px-6 py-16 sm:py-20">
-        <ScrollReveal variant="panel">
-          <StatRow stats={STATS} />
-        </ScrollReveal>
+      <div className="rail-x mx-auto flex w-full max-w-5xl flex-col gap-14 px-6 py-14 sm:gap-16 sm:py-16">
+        <section>
+          <ScrollReveal variant="panel">
+            <StatRow stats={STATS} />
+          </ScrollReveal>
+        </section>
 
         <section className="flex flex-col gap-6">
-          <div className="flex items-baseline justify-between border-b border-border pb-4">
-            <h2 className="font-mono text-xs tracking-[0.15em] text-ink-muted uppercase">Featured Projects</h2>
-            <div className="flex items-baseline gap-4">
+          <div className="edge-ticks flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-border pt-3 pb-4">
+            <h2 className="font-mono text-xs tracking-[0.15em] text-ink-muted uppercase">
+              Featured Projects
+            </h2>
+            <div className="flex items-baseline gap-5">
               <span className="font-mono text-[11px] text-ink-muted">04 Selected</span>
-              <Link href="/projects" className="font-mono text-[13px] text-ink-muted transition-colors hover:text-ink hover:underline">
+              <Link
+                href="/projects"
+                className="text-[13px] text-ink-muted transition-colors hover:text-ink hover:underline"
+              >
                 전체 프로젝트 보기 →
               </Link>
             </div>

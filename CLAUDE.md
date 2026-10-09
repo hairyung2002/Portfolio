@@ -32,7 +32,7 @@
 | `03_project02_PromptPlace.md`     | AI 프롬프트 마켓 / 프론트엔드 · 결제 |
 | `03_project03_WalkingCity.md`     | 산책 추천 / RAG             |
 | `03_project04_Wilson.md`          | 시니어 케어 AI / 분산 아키텍처     |
-| `03_project05_ProxyWebService.md` | EdgeMesh / C 프록시 엔진     |
+| `03_project05_ProxyWebService.md` | Nexo / C 프록시 엔진         |
 | `03_project06_DongDay.md`         | 동데이 / PM · 사용자 검증       |
 
 이 파일들은 **내부용 원재료**다.
@@ -98,11 +98,11 @@
 
 설계 내용과 실측 결과를 시각적으로 구분한다.
 
-### EdgeMesh
+### Nexo
 
-개발 착수 단계임을 명시한다.
+구현 단계(상태 배지: 개발 중)임을 명시한다.
 
-구현 결과처럼 표현하지 않는다.
+엔진 구동 확인·부하테스트 전이므로 목표 수치를 실측 결과처럼 표현하지 않는다.
 
 **설계 결정 로그** 중심으로 보여준다.
 
@@ -204,7 +204,7 @@ type Decision = {
 * Dirvana
 * Wilson
 * PromptPlace
-* EdgeMesh
+* Nexo
 
 Walking City와 동데이는 전체 프로젝트 목록에는 포함하지만 랜딩에서는 제외한다.
 

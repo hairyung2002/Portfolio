@@ -1,4 +1,4 @@
-# 프로젝트명: EdgeMesh (Proxy Web Service)
+# 프로젝트명: Nexo (Proxy Web Service)
 
 ## 기본 정보
 - 한 줄 소개: Nginx 설정을 두려워하는 초심자도 웹 콘솔에서 라우팅을 관리할 수 있고, 동시에 직접 구현한 고성능 C 프록시 엔진을 선택적으로 사용해볼 수 있는 동적 API 게이트웨이 플랫폼
@@ -39,12 +39,12 @@
   DataPlaneAdapter (interface)
         │
    ┌────┴─────┐
-NginxAdapter   EdgeMeshEngineAdapter
+NginxAdapter   NexoEngineAdapter
 (실제 nginx)   (자체 C 엔진: epoll+rwlock)
 ```
 
 - **Control Plane**: 라우팅 변경 요청을 검증/영속화하고, 선택된 어댑터를 통해 실제 데이터 플레인에 반영
-- **Data Plane (선택 가능)**: `NginxAdapter`(실제 nginx config 생성/검증 후 reload) / `EdgeMeshEngineAdapter`(직접 구현한 C 엔진과 UDS/JSON-RPC로 통신)
+- **Data Plane (선택 가능)**: `NginxAdapter`(실제 nginx config 생성/검증 후 reload) / `NexoEngineAdapter`(직접 구현한 C 엔진과 UDS/JSON-RPC로 통신)
 
 ---
 
@@ -52,7 +52,7 @@ NginxAdapter   EdgeMeshEngineAdapter
 
 ### Decision 1. 왜 Nginx를 대체하지 않고 "어댑터로 병행 지원"하는 구조를 택했는가
 - **상황**: C 엔진을 직접 구현하는 것 자체가 목적이지만, 실제 프로덕션에서 검증된 Nginx의 안정성을 무시할 수는 없음
-- **결정**: `DataPlaneAdapter` 인터페이스를 두고 `NginxAdapter`(실제 nginx)와 `EdgeMeshEngineAdapter`(자체 C 엔진)를 모두 지원하도록 설계. 커스텀 엔진 선택 시 "Experimental — not battle-tested" 경고 배지 노출
+- **결정**: `DataPlaneAdapter` 인터페이스를 두고 `NginxAdapter`(실제 nginx)와 `NexoEngineAdapter`(자체 C 엔진)를 모두 지원하도록 설계. 커스텀 엔진 선택 시 "Experimental — not battle-tested" 경고 배지 노출
 - **이유**: 초보자에게는 검증된 Nginx라는 안전망을 제공하면서, 동시에 본인이 만든 엔진을 "선택적으로 실험해볼 수 있는" 형태로 만들어 정직성과 기술 증명을 동시에 확보
 
 ### Decision 2. 원자적 라우팅 스왑 메커니즘 — 이 프로젝트의 핵심 기술 난제
@@ -83,7 +83,7 @@ NginxAdapter   EdgeMeshEngineAdapter
 | 1 | C Core: epoll 루프, picohttpparser, RoutingTable, UDS 리스너 | 1~2주 |
 | 2 | Atomic Swap: rwlock 스왑 + old table 안전 회수 (최대 난제) | 1.5~3주 |
 | 3 | Control Plane: NestJS + PostgreSQL + UDS 클라이언트 + 서킷브레이커 | 3~5일 |
-| 3.5 | DataPlaneAdapter 인터페이스 + NginxAdapter/EdgeMeshEngineAdapter 구현 | 3~5일 |
+| 3.5 | DataPlaneAdapter 인터페이스 + NginxAdapter/NexoEngineAdapter 구현 | 3~5일 |
 | 4 | Web Console: 라우팅 관리 GUI + 대시보드 + 엔진 선택 UI | 3~5일 |
 | 5 | 검증/마무리: wrk 부하테스트, 5xx 0% 실증, 문서화 | 3~7일 |
 

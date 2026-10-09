@@ -3,10 +3,10 @@ import { dirvana } from "./dirvana";
 import { promptplace } from "./promptplace";
 import { walkingCity } from "./walking-city";
 import { wilson } from "./wilson";
-import { edgemesh } from "./edgemesh";
+import { nexo } from "./nexo";
 import { dongday } from "./dongday";
 
-export const allProjects: Project[] = [dirvana, wilson, promptplace, edgemesh, walkingCity, dongday];
+export const allProjects: Project[] = [dirvana, wilson, promptplace, nexo, walkingCity, dongday];
 
 export const featuredProjects: Project[] = allProjects.filter((p) => p.featured);
 

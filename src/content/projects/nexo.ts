@@ -1,11 +1,11 @@
 import type { Project } from "./types";
 
-export const edgemesh: Project = {
-  slug: "NEXO",
+export const nexo: Project = {
+  slug: "nexo",
   name: "Nexo",
   oneLiner:
-    "Nginx 오픈소스 분석 기반 C 프록시 엔진 — 무중단 라우팅 스왑이라는 난제를 정의하고 스코프를 의도적으로 좁힌 설계 기록",
-  status: "설계 단계",
+    "Nginx 오픈소스 분석 기반 C 프록시 엔진 — 무중단 라우팅 스왑이라는 난제를 정의하고 스코프를 의도적으로 좁혀 구현 중인 프로젝트",
+  status: "개발 중",
   period: "진행 중 (개인 사이드 프로젝트)",
   roles: ["Backend", "Infra"],
   myRole: "1인 개발 — 기획, C 엔진, NestJS Control Plane, React 콘솔 전체 담당",
@@ -45,7 +45,7 @@ export const edgemesh: Project = {
       tradeoff:
         "어댑터 계층을 추가로 설계해야 하는 대신, 커스텀 엔진 선택 시 'Experimental — not battle-tested' 경고를 노출해 신뢰 경계를 명확히 할 수 있었다.",
       result:
-        "NginxAdapter(실제 nginx)와 EdgeMeshEngineAdapter(자체 C 엔진)를 함께 지원하는 구조로 설계했다.",
+        "DataPlaneAdapter 인터페이스 아래 NginxAdapter(실제 nginx)와 NexoEngineAdapter(자체 C 엔진)를 함께 지원하는 구조로 구현했다.",
     },
     {
       title: "원자적 라우팅 스왑 메커니즘",
@@ -60,7 +60,7 @@ export const edgemesh: Project = {
       tradeoff:
         "교체된 구(舊) 테이블을 언제 안전하게 해제할지가 핵심 난제로 남았다 — 아직 참조 중인 스레드가 있으면 즉시 해제 시 use-after-free 위험이 있다.",
       result:
-        "pthread_rwlock_wrlock으로 짧게 잠그고 포인터만 교체하는 방식까지는 설계했다. Refcount 또는 grace period 기반의 안전한 회수 전략은 아직 구현 전이다.",
+        "pthread_rwlock_wrlock으로 짧게 잠그고 포인터만 교체하는 방식으로 구현했다. 교체된 구 테이블은 메모리 할당 관리 계층에서 해제하도록 처리했으며, 스왑 중 메모리 안전성은 엔진 구동 확인과 ASan/Valgrind 검증 단계에서 확인할 예정이다.",
     },
     {
       title: "MVP 스코프를 의도적으로 좁힘",
@@ -80,7 +80,7 @@ export const edgemesh: Project = {
   ],
 
   implementation:
-    "Control Plane(NestJS + PostgreSQL)이 라우팅 변경 요청을 검증·영속화하고, DataPlaneAdapter 인터페이스를 통해 NginxAdapter 또는 자체 구현한 EdgeMeshEngineAdapter(C, epoll+rwlock)로 실제 반영하는 구조를 설계했다. NestJS의 1차 검증과 별개로, C 엔진에서도 고정 버퍼 크기 사전 검증(`snprintf` 사용, 초과 시 400 거부)을 독립적으로 수행하도록 해, 상위 계층의 신뢰가 메모리 안전이 중요한 C 레이어까지 전파되지 않도록 했다.\n\n검증 기준도 수치로 미리 정했다 — wrk 부하테스트 50,000 TPS 목표, 라우팅 스왑 시 5xx 실패율 0% 실증, ASan/Valgrind 메모리 안전 검증(0 leak)을 CI 게이트로 강제하기로 했다. 현재는 기획이 끝나고 개발 착수 단계로, C Core(epoll 루프, RoutingTable, UDS 리스너) 구현부터 진행할 예정이다.",
+    "Control Plane(NestJS + PostgreSQL)이 라우팅 변경 요청을 검증·영속화하고, DataPlaneAdapter 인터페이스를 통해 NginxAdapter 또는 자체 구현한 NexoEngineAdapter(C, epoll+rwlock)로 실제 반영하는 구조를 구현했다. C 엔진 코어(epoll 이벤트 루프, RoutingTable, UDS 리스너)와 NestJS Control Plane 구현을 마쳤다. NestJS의 1차 검증과 별개로, C 엔진에서도 고정 버퍼 크기 사전 검증(`snprintf` 사용, 초과 시 400 거부)을 독립적으로 수행하도록 해, 상위 계층의 신뢰가 메모리 안전이 중요한 C 레이어까지 전파되지 않도록 했다.\n\n검증 기준도 수치로 미리 정했다 — wrk 부하테스트 50,000 TPS 목표, 라우팅 스왑 시 5xx 실패율 0% 실증, ASan/Valgrind 메모리 안전 검증(0 leak)을 CI 게이트로 강제하기로 했다. 현재는 구현 단계로, 남은 작업은 엔진 구동 확인과 웹 콘솔(클라이언트 화면), 간편 조작 API 구현이다.",
 
   outcome: [
     {
@@ -90,12 +90,17 @@ export const edgemesh: Project = {
     },
     {
       label:
+        "C 엔진 코어(epoll 루프, RoutingTable, UDS 리스너) 및 NestJS Control Plane 구현 완료",
+      verified: true,
+    },
+    {
+      label:
         "wrk 부하테스트 50,000 TPS, 라우팅 스왑 5xx 실패율 0%, ASan/Valgrind 0 leak",
       verified: false,
-      note: "목표 수치 — 개발 착수 단계라 실측 없음",
+      note: "목표 수치 — 엔진 구동 확인 전이라 실측 없음",
     },
   ],
 
   reflection:
-    "이 프로젝트의 핵심 성공 조건은 두 가지였다. 사회적 영향력을 정당화 근거로 쓰지 않고 기술 역량 증명에 집중하는 것, 그리고 메모리 안전·원자적 스왑 같은 핵심 몇 개만 완벽히 구현하고 나머지는 '설계함'으로 솔직히 밝히는 것. 아직 개발 착수 단계라 원자적 스왑의 old table 회수 전략처럼 설계는 했지만 구현하지 못한 부분이 남아 있다. 완주하지 못하더라도, 이런 문제를 이렇게 정의하고 설계했다는 기록 자체를 남기기로 했다.",
+    "이 프로젝트의 핵심 성공 조건은 두 가지였다. 사회적 영향력을 정당화 근거로 쓰지 않고 기술 역량 증명에 집중하는 것, 그리고 메모리 안전·원자적 스왑 같은 핵심 몇 개만 완벽히 구현하고 나머지는 '설계함'으로 솔직히 밝히는 것. 엔진 코어와 Control Plane 구현은 마쳤지만, 원자적 스왑과 메모리 안전성이 실제 부하에서 의도대로 동작하는지는 아직 실측으로 확인하지 못했다. 남은 구동 확인과 부하테스트로 설계 의도를 실측으로 증명하는 것이 다음 과제다.",
 };

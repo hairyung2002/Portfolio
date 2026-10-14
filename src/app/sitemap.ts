@@ -11,10 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/about`, priority: 0.6 },
   ];
 
-  const projectRoutes: MetadataRoute.Sitemap = allProjects.map((project) => ({
-    url: `${siteUrl}/projects/${project.slug}`,
-    priority: 0.7,
-  }));
+  const projectRoutes: MetadataRoute.Sitemap = allProjects.flatMap((project) => [
+    { url: `${siteUrl}/projects/${project.slug}`, priority: 0.7 },
+    ...project.decisions.map((_, i) => ({
+      url: `${siteUrl}/projects/${project.slug}/decisions/${i + 1}`,
+      priority: 0.5,
+    })),
+  ]);
 
   return [...staticRoutes, ...projectRoutes];
 }

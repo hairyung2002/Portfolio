@@ -1,143 +1,130 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allProjects, getProjectBySlug } from "@/content/projects";
-import { StatusBadge } from "@/components/StatusBadge";
-import { RoleTag } from "@/components/RoleTag";
-import { Section } from "@/components/Section";
-import { ProseText } from "@/components/ProseText";
-import { DecisionLog } from "@/components/DecisionLog";
+import { allProjects, featuredNumber, featuredProjects, getProjectBySlug, nextProject } from "@/content/projects";
+import { DepthScene } from "@/components/DepthScene";
+import { DecisionList } from "@/components/DecisionList";
+import { Emph, plain } from "@/components/Emph";
 import { OutcomeList } from "@/components/OutcomeList";
-import { ScanLine } from "@/components/ScanLine";
+import { PageNav } from "@/components/PageNav";
+import { ProseText } from "@/components/ProseText";
+import { SectionHeading } from "@/components/SectionHeading";
+import { StatusBadge } from "@/components/StatusBadge";
+import { ThreadList } from "@/components/ThreadList";
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return allProjects.map((project) => ({ slug: project.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return {};
   return {
     title: project.name,
-    description: project.oneLiner,
+    description: `${plain(project.insight)} ${project.line}`,
   };
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+/*
+ * 상세 순서 (HANDOFF §16):
+ * 한 줄 결론 → 역할·기간·상태 → 배경 → 결과 → 핵심 판단 → 구현 → 회고 → 이어진 것
+ * 구현·회고는 상세 구성이 확정될 때까지 기존 내용을 그대로 남겨 둔다.
+ */
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) notFound();
 
-  const idx = allProjects.findIndex((p) => p.slug === slug);
-  const prev = idx > 0 ? allProjects[idx - 1] : null;
-  const next = idx < allProjects.length - 1 ? allProjects[idx + 1] : null;
+  const no = featuredNumber(project);
+  const next = nextProject(project);
+  const hasOutcome = project.outcome.length > 0 || !!project.pending;
 
   return (
-    <div className="flex flex-col">
-      <div className="relative overflow-hidden border-b border-border bg-surface/40">
-        <ScanLine key={slug} />
-        <div className="mx-auto flex max-w-3xl flex-col gap-5 px-6 py-14 sm:py-16">
-          <Link href="/projects" className="w-fit font-mono text-xs text-ink-muted transition-colors hover:text-ink">
-            ← All Projects
-          </Link>
-          <div className="flex flex-wrap items-center gap-3">
-            <StatusBadge status={project.status} />
-            <span className="text-[12px] text-ink-muted">{project.period}</span>
+    <section className="layer" aria-label="프로젝트">
+      <DepthScene>
+        <p className="eyebrow" data-in>
+          {no ? `PROJECT ${no} / ${String(featuredProjects.length).padStart(2, "0")}` : "PROJECT"} · {project.period}
+        </p>
+        <h1 className="pname metal" data-in tabIndex={-1}>
+          {project.name}
+        </h1>
+        <p className="insight" data-in>
+          <Emph text={project.insight} />
+        </p>
+
+        <dl className="facts" data-in>
+          <div>
+            <dt>역할</dt>
+            <dd>{project.role}</dd>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-balance text-ink sm:text-4xl">{project.name}</h1>
-            <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ink-muted">{project.oneLiner}</p>
+            <dt>기간</dt>
+            <dd>{project.period}</dd>
           </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px] leading-relaxed text-ink-muted">
-            <span>{project.myRole}</span>
-            {project.teamSize && (
-              <>
-                <span aria-hidden="true">·</span>
-                <span>{project.teamSize}</span>
-              </>
-            )}
+          <div>
+            <dt>상태</dt>
+            <dd>
+              <StatusBadge status={project.status} />
+            </dd>
           </div>
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            {project.roles.map((role) => (
-              <RoleTag key={role} label={role} />
-            ))}
-            {project.links?.map((link) => {
-              const isLive = /live/i.test(link.label);
-              return (
-                <a
-                  key={link.url}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={
-                    isLive
-                      ? "flex items-center gap-1.5 border border-accent/50 bg-accent-soft px-2 py-0.5 font-mono text-[11px] font-semibold text-accent transition-colors hover:border-accent"
-                      : "border border-metal-dim px-1.5 py-0.5 font-mono text-[11px] text-metal transition-colors hover:border-ink hover:text-ink"
-                  }
-                >
-                  {isLive && (
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-                    </span>
-                  )}
-                  {link.label} ↗
+        </dl>
+
+        {project.links && project.links.length > 0 && (
+          <ul className="plinks" data-in aria-label="링크">
+            {project.links.map((l) => (
+              <li key={l.url}>
+                <a className={l.live ? "live" : undefined} href={l.url} target="_blank" rel="noopener noreferrer">
+                  {l.live && <i aria-hidden="true" />}
+                  {l.live ? `실서비스 · ${l.label}` : l.label} ↗
                 </a>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <div className="rail-x mx-auto flex w-full max-w-3xl flex-col gap-2 px-6 py-14 sm:py-16">
-        <Section title="Problem" index={1} first>
-          <ProseText text={project.problem} />
-        </Section>
+        <p className="context" data-in>
+          {project.context}
+        </p>
 
-        <Section title="Decisions" index={2}>
-          <DecisionLog decisions={project.decisions} />
-        </Section>
+        {hasOutcome && (
+          <>
+            <SectionHeading title="결과" label="OUTCOME" />
+            <OutcomeList items={project.outcome} pending={project.pending} />
+          </>
+        )}
 
-        <Section title="Implementation" index={3}>
-          <ProseText text={project.implementation} />
-        </Section>
+        <SectionHeading title="핵심 판단" label="DECISIONS" />
+        <DecisionList slug={project.slug} decisions={project.decisions} />
 
-        <Section title="Outcome" index={4}>
-          <OutcomeList items={project.outcome} />
-        </Section>
+        {project.implementation && (
+          <>
+            <SectionHeading title="구현" label="IMPLEMENTATION" />
+            <ProseText text={project.implementation} />
+          </>
+        )}
 
-        <Section title="Reflection" index={5}>
-          <ProseText text={project.reflection} />
-        </Section>
-      </div>
+        {project.reflection && (
+          <>
+            <SectionHeading title="회고" label="REFLECTION" />
+            <ProseText text={project.reflection} />
+          </>
+        )}
 
-      <div className="border-t border-border">
-        <div className="mx-auto grid max-w-3xl grid-cols-1 divide-y divide-border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-          <Link
-            href={prev ? `/projects/${prev.slug}` : "/projects"}
-            className="group flex flex-col gap-1 px-6 py-8 transition-colors hover:bg-surface"
-          >
-            <span className="font-mono text-[11px] text-ink-muted uppercase">← Prev</span>
-            <span className="text-ink transition-colors group-hover:underline">{prev ? prev.name : "전체 프로젝트"}</span>
-          </Link>
-          <Link
-            href={next ? `/projects/${next.slug}` : "/projects"}
-            className="group flex flex-col gap-1 px-6 py-8 text-right transition-colors hover:bg-surface"
-          >
-            <span className="font-mono text-[11px] text-ink-muted uppercase">Next →</span>
-            <span className="text-ink transition-colors group-hover:underline">{next ? next.name : "전체 프로젝트"}</span>
-          </Link>
-        </div>
-      </div>
-    </div>
+        {project.threads.length > 0 && (
+          <>
+            <SectionHeading title="이어진 것" label="THREADS" />
+            <ThreadList threads={project.threads} />
+          </>
+        )}
+
+        <PageNav
+          label="프로젝트 이동"
+          prev={{ href: "/projects", k: "← PROJECTS", v: "전체 프로젝트" }}
+          next={{ href: `/projects/${next.slug}`, k: "NEXT PROJECT →", v: next.name }}
+        />
+      </DepthScene>
+    </section>
   );
 }

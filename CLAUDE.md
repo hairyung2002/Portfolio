@@ -140,47 +140,50 @@
 
 # 4. 기술 스택
 
-* Next.js 15
+* Next.js 16 (정적 export)
 * App Router
 * TypeScript strict
 * Tailwind CSS v4
+* GSAP + ScrollTrigger, Lenis
 * Vitest
 * Vercel
 
 콘텐츠는 DB 없이 타입이 강제된 데이터 레이어로 관리한다.
 
-`src/content/projects/*.ts`가 공통 `Project` 타입 객체를 export한다.
-
-`Project` 타입은 아래 구조를 필수 필드로 강제한다.
+`src/content/projects/*.ts`가 공통 `Project` 타입 객체를 export한다 (`src/content/projects/types.ts`).
 
 ```ts
 type Project = {
-  problem: string
+  slug; name; period; featured; status
+  line: string        // 플레이트·목록용 한 줄
+  tag: string         // 플레이트 하단 키워드
+  insight: string     // 상세 상단 한 줄 결론. *구간*은 강조
+  role: string
+  context: string     // 배경
+  outcome: string[]   // 출처가 확인된 결과만
+  pending?: { label; text }  // 미검증·측정 전 안내 (결과와 시각적으로 분리)
   decisions: Decision[]
-  implementation: string
-  outcome: Outcome
-  reflection: string
+  implementation?: string
+  reflection?: string
+  threads: { dir: "이전" | "이후"; name; text; href }[]
+  links?: { label; url; live? }[]
 }
-```
 
-각 Decision:
-
-```ts
 type Decision = {
-  title: string
-  situation: string
-  options: string[]
-  reasoning: string
-  tradeoff: string
-  result: string
+  title; subtitle; situation
+  options?: { title; desc?; chosen? }[]
+  optionLabel?: "선택" | "지금이라면" | "시도한 순서"
+  reasoning; tradeoff; result
 }
 ```
 
-각 Outcome에는 반드시 `verified: boolean` 플래그를 포함한다.
+검증된 결과는 `outcome`, 검증 전인 것은 `pending`으로 나눈다. 진행 중 프로젝트는 `pending`이 필수다(테스트로 강제).
 
-이 순서가 이 포트폴리오의 핵심 논지다.
+그 외 콘텐츠: `src/content/activities.ts`(메인 Activities + About 활동), `otherProjects.ts`, `about.ts`, `profile.ts`(메인 대문장 `HEADLINE` 상수 포함).
 
-> 문제 정의 → 판단 → 구현 → 결과 → 회고
+이 포트폴리오의 핵심 논지:
+
+> 한 줄 결론 → 배경 → 결과 → 판단 → 이어진 것
 
 기능 목록보다 **판단 근거와 트레이드오프가 먼저 보이는 구조**를 유지한다.
 
@@ -188,44 +191,37 @@ type Decision = {
 
 # 5. 페이지 구조
 
+화면·문구·모션의 기준은 `docs/portfolio-prototype.html`, 구현 가이드는 `docs/HANDOFF.md`다.
+
+| 경로 | 화면 | 깊이 |
+|---|---|---|
+| `/` | 메인. 소개 → Activities → Featured Projects | 0 |
+| `/projects` | 대표 4개 + 그 외 프로젝트 목록 | 1 |
+| `/about` | 학력, 활동, 발표, 수상, 기술, 연락 | 1 |
+| `/projects/[slug]` | 프로젝트 상세 | 2 |
+| `/projects/[slug]/decisions/[n]` | 판단 상세 | 3 |
+
+* 모든 페이지는 실제 URL을 가진 정적 페이지다 (`generateStaticParams`).
+* 페이지 전환은 깊이 비교로 정해진다: 깊어지면 줌 인, 얕아지면 줌 아웃, 같으면 옆으로 (`src/lib/routes.ts`, `TransitionProvider`).
+* 상단 "← 뒤로"와 ESC는 한 단계 위 경로로 줌 아웃한다. 브라우저 뒤로가기도 같은 연출을 탄다.
+
 ## `/`
 
-랜딩 페이지.
+메인. 세 장면으로 구성한다.
 
-포함:
+1. 소개: 금속 이름 + 대문장(`HEADLINE`) + 한 줄 소개
+2. Activities: 가로 타임라인 (모바일은 세로 목록)
+3. Featured Projects: 플레이트 4개 + 연락처
 
-* 한 줄 소개
-* 핵심 지표 3개
-* 대표 프로젝트 4개
-* 연락처
+대표 프로젝트: Dirvana, PromptPlace, Wilson, Nexo.
 
-대표 프로젝트:
-
-* Dirvana
-* Wilson
-* PromptPlace
-* Nexo
-
-Walking City와 동데이는 전체 프로젝트 목록에는 포함하지만 랜딩에서는 제외한다.
-
-동데이는 일반 기술 프로젝트와 다른 성격을 가지므로:
-
-> **기술이 아니라 판단으로 보여주는 카드**
-
-라는 별도 톤으로 구성한다.
+Walking City와 동데이는 `/projects`의 "그 외 프로젝트"에서 상세로 연결한다. 동데이는 기술이 아니라 **판단으로 보여주는** 톤을 유지한다.
 
 ---
 
 ## `/projects`
 
-전체 프로젝트 목록.
-
-역할/스택 필터:
-
-* Backend
-* Frontend
-* Infra
-* PM
+대표 프로젝트 4개(행 + 상태)와 그 외 프로젝트 목록. 필터는 두지 않는다.
 
 프로젝트 상태와 핵심 문제를 빠르게 파악할 수 있어야 한다.
 
@@ -233,33 +229,15 @@ Walking City와 동데이는 전체 프로젝트 목록에는 포함하지만 �
 
 ## `/projects/[slug]`
 
-프로젝트 상세.
-
-`Project` 타입의 구조를 그대로 렌더링한다.
-
-권장 정보 흐름:
-
-1. Problem
-2. Decisions
-3. Implementation
-4. Outcome
-5. Reflection
+프로젝트 상세. 순서는 16번 항목을 따른다.
 
 ---
 
 ## `/about`
 
-포함:
+학력, 활동, 발표(PyCon 2026), 수상, 기술, 연락.
 
-* 학력
-* 스택
-* 활동
-* 수상
-* PyCon 2026 연사 예정
-
-`02_이력서.md`의 기타 프로젝트 8개는 `/about` 하단에 **한 줄 요약 리스트**로만 보여준다.
-
-프로젝트에 GitHub / 배포 링크가 존재하면 눈에 띄게 노출한다.
+프로젝트에 GitHub / 배포 링크가 존재하면 상세에서 눈에 띄게 노출한다.
 
 특히 PromptPlace는 `promptplace.kr` 실서비스이므로 배포 링크를 명확하게 강조한다.
 
@@ -461,21 +439,22 @@ Full Stack Developer
 
 대신 **거대한 typography + 작은 technical metadata + 공간 + 움직이는 빛**으로 구성한다.
 
-예시 구조:
+메인은 세 장면이다. Hero에 스탯 행(핵심 지표 숫자)은 두지 않는다.
 
 ```text
-┌─────────────────────────────────────────────────────────┐
-│  NAME                                  INDEX / 01       │
-│                                                         │
-│                                                         │
-│       BUILDING SYSTEMS                                 │
-│       THAT SURVIVE                                     │
-│       REAL CONDITIONS.                                 │
-│                                                         │
-│                              BACKEND / FRONTEND / INFRA │
-│                                                         │
-│  ↓ SCROLL                                               │
+┌─ 장면 1: 소개 ──────────────────────────────────────────┐
+│  INDEX / 00                BACKEND-LEANING FULL-STACK…  │
+│  ─────────────────────────────────────────────────────  │
+│  곽도윤            ← 금속 이름, 빛이 표면을 따라 이동     │
+│  운영되는 *시스템*을   ← HEADLINE 상수 (미확정)          │
+│  다루는 엔지니어.                                        │
+│  한 줄 소개                                 KWAK DOYOUN  │
+│  │ SCROLL ↓                                             │
 └─────────────────────────────────────────────────────────┘
+        ↓ (확대·블러로 통과)
+┌─ 장면 2: Activities ── 가로선 위아래로 번갈아 놓인 활동 ─┐
+        ↓
+┌─ 장면 3: Featured Projects ── 플레이트 4개 + 연락처 ────┐
 ```
 
 문구 자체는 실제 원본 데이터에 있는 경험과 일치하도록 작성한다.
@@ -513,9 +492,14 @@ Full Stack Developer
 * magnetic interaction
 * cursor interaction
 
-이미 프로젝트에 animation library가 있다면 기존 라이브러리를 우선 사용한다.
+이미 프로젝트에 animation library가 있다면 기존 라이브러리를 우선 사용한다 (GSAP + ScrollTrigger, Lenis).
 
 불필요한 dependency를 추가하지 않는다.
+
+데스크톱·태블릿(641px 이상)은 세 장면을 한 무대에 겹쳐 화면 높이 3.2배만큼 고정(pin)하고 한 타임라인을 스크롤에 묶는다. 진행률 구간은 `src/components/IndexStage.tsx` 상단 주석에 있다. 모바일은 고정하지 않고 블록마다 다가오고 물러나는 깊이 효과(`depthPass`)만 쓴다.
+
+* 고정할 요소의 조상에 `transform`/`will-change: transform`을 걸지 않는다. 전환 연출이 main을 움직일 때도 고정 중인 장면은 그 장면 자체를 움직인다.
+* 진입 애니메이션(가로선 → Scanning Light → 이름 조립 → 반사광 → 대문장)은 첫 진입에서만, 재생 중 입력이 들어오면 즉시 끝까지 넘긴다.
 
 ---
 
@@ -580,16 +564,20 @@ Hero에서 이것이 빠르게 파악되어야 한다.
 
 # 15. PROJECT CARD
 
-각 프로젝트 카드에는 최소한:
+메인의 프로젝트 카드는 금속 플레이트다 (`ProjectPlate`).
 
-* 프로젝트명
-* 상태
-* 한 줄 문제 정의
-* 역할
-* 핵심 기술
-* 주요 결과
+```text
+┌──────────────────────────────┐  ← 상단 모서리 반사광, hover 때 표면을 스치는 빛
+│ 01 / 04          ● 운영 종료 │  번호 + 상태(점 + 텍스트)
+│                              │
+│ Dirvana                      │  프로젝트명
+│ 축제 첫날 공격으로 멈춘…     │  line: 한 줄
+│ ──────────────────────────── │
+│ 운영 · 장애 대응 · 인프라  → │  tag: 키워드
+└──────────────────────────────┘
+```
 
-가 보여야 한다.
+역할·기간은 `/projects` 목록 행과 상세에서 보여준다.
 
 기술 스택을 로고 벽처럼 나열하지 않는다.
 
@@ -623,54 +611,31 @@ Backend · Infrastructure
 핵심 구조:
 
 ```text
-PROJECT
+PROJECT 01 / 04 · 2025.09
+Dirvana                         ← 금속 대제목
 
-[Status] [Role] [Period]
+한 줄 결론 (insight)            ← 이 프로젝트가 증명하는 것
 
-Problem
-────────────────────────
+역할 │ 기간 │ 상태
+[GitHub ↗] [실서비스 ↗]
 
-무엇이 문제였는가?
+배경 (context)
 
+결과 OUTCOME
+● 검증된 결과
+┆ 측정 전 · 미검증 안내 ┆        ← 점선 상자로 분리
 
-Decisions
-────────────────────────
+핵심 판단 DECISIONS
+D1  판단 제목 / 부제        →    ← 판단 페이지로 줌 인
+D2  …
 
-01
-Situation
+구현 IMPLEMENTATION             ← 상세 구성 확정 전까지 기존 내용 유지
+회고 REFLECTION
 
-Options
+이어진 것 THREADS
+← 이전 / 이후 →  다른 프로젝트·발표와의 연결
 
-Reasoning
-
-Tradeoff
-
-Result
-
-
-02
-...
-
-
-Implementation
-────────────────────────
-
-무엇을 직접 구현했는가?
-
-
-Outcome
-────────────────────────
-
-검증된 결과
-+
-검증되지 않은 설계 기대치의 명확한 구분
-
-
-Reflection
-────────────────────────
-
-무엇을 배웠고
-무엇이 아직 한계인가?
+← PROJECTS            NEXT PROJECT →
 ```
 
 Decision은 이 사이트의 핵심 콘텐츠다.
@@ -681,24 +646,24 @@ Decision은 이 사이트의 핵심 콘텐츠다.
 
 # 17. DECISION VISUALIZATION
 
-Decision은 일반적인 accordion이나 카드보다 더 editorial하게 보여준다.
+Decision은 accordion이 아니라 별도 페이지(`/projects/[slug]/decisions/[n]`)로 보여준다.
 
-다음 관계가 시각적으로 이해되어야 한다.
+스크롤에 따라 그려지는 세로선 위로 단계가 이어진다.
 
 ```text
-SITUATION
-    ↓
-OPTIONS
- ┌───────┬───────┬───────┐
- │   A   │   B   │   C   │
- └───────┴───────┴───────┘
-          ↓
-      REASONING
-          ↓
-       TRADEOFF
-          ↓
-        RESULT
+◇ 01 SITUATION   상황
+│
+◇ 02 OPTIONS     선택지
+│  ┌ 대안 ──┐ ┌ 대안 ──┐ ┌ 선택 ──┐   ← 고른 선택지만 강조
+│  └────────┘ └────────┘ └────────┘     (라벨: 선택 / 지금이라면 / 시도한 순서)
+◇ 03 REASONING   근거
+│
+◇ 04 TRADEOFF    트레이드오프
+│
+◆ 05 RESULT      결과
 ```
+
+선택지가 없는 판단은 OPTIONS 단계를 생략하고 번호를 당긴다.
 
 사용자가 "왜 이 기술을 골랐는가?"를 한눈에 이해할 수 있어야 한다.
 
@@ -1120,9 +1085,12 @@ Vitest로 데이터 레이어를 검증한다.
 * slug 중복 없음
 * 금지어 미포함
 * 프로젝트 상태 존재
-* 모든 프로젝트에 problem 존재
+* 모든 프로젝트에 insight·context 존재
 * 모든 프로젝트에 최소 1개의 decision 존재
-* outcome의 verified 플래그 존재
+* 검증된 결과(outcome)가 없으면 측정 전 안내(pending) 존재, 진행 중 프로젝트는 pending 필수
+* 금지어 검사는 프로젝트뿐 아니라 모든 콘텐츠 파일(활동·About·그 외 프로젝트·대문장)에 적용
+* 이어진 것·그 외 프로젝트의 링크가 실제 경로를 가리킴
+* 라우트 깊이·상위 경로 계산 (`src/lib/routes.test.ts`)
 
 ---
 

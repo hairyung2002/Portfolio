@@ -1,52 +1,44 @@
-import Link from "next/link";
-import { featuredProjects } from "@/content/projects";
-import { ProjectCard } from "@/components/ProjectCard";
-import { StatRow } from "@/components/StatRow";
-import { ScrollReveal } from "@/components/ScrollReveal";
+import { featuredProjects, featuredNumber } from "@/content/projects";
+import { profile } from "@/content/profile";
 import { Hero } from "@/components/Hero";
-
-const STATS = [
-  { value: "10,000+", label: "Dirvana 누적 활성 사용자", note: "GA 검증" },
-  { value: "20,000+", label: "Dirvana 게임 이벤트 참여", note: "GA 검증" },
-  { value: "1", label: "실서비스 운영 중 (PromptPlace)", note: "2025.07 ~" },
-];
+import { ActivityTimeline } from "@/components/ActivityTimeline";
+import { IndexStage } from "@/components/IndexStage";
+import { introScript } from "@/lib/intro";
+import { InlineScript } from "@/components/InlineScript";
+import { ProjectPlate } from "@/components/ProjectPlate";
 
 export default function Home() {
+  const total = featuredProjects.length;
   return (
-    <div className="flex flex-col">
-      <Hero />
-
-      <div className="rail-x mx-auto flex w-full max-w-5xl flex-col gap-14 px-6 py-14 sm:gap-16 sm:py-16">
-        <section>
-          <ScrollReveal variant="panel">
-            <StatRow stats={STATS} />
-          </ScrollReveal>
-        </section>
-
-        <section className="flex flex-col gap-6">
-          <div className="edge-ticks flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-border pt-3 pb-4">
-            <h2 className="font-mono text-xs tracking-[0.15em] text-ink-muted uppercase">
-              Featured Projects
-            </h2>
-            <div className="flex items-baseline gap-5">
-              <span className="font-mono text-[11px] text-ink-muted">04 Selected</span>
-              <Link
-                href="/projects"
-                className="text-[13px] text-ink-muted transition-colors hover:text-ink hover:underline"
-              >
-                전체 프로젝트 보기 →
-              </Link>
-            </div>
+    <section className="layer" aria-label="개요">
+      <InlineScript html={introScript} />
+      <IndexStage>
+        <Hero />
+        <ActivityTimeline />
+        <div className="idx-rest">
+          <div className="rest-head">
+            <p className="eyebrow">SELECTED WORK · {String(total).padStart(2, "0")}</p>
+            <h2 className="scene-title">Featured Projects</h2>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {featuredProjects.map((project, index) => (
-              <ScrollReveal key={project.slug} variant="flip" index={index}>
-                <ProjectCard project={project} index={index + 1} />
-              </ScrollReveal>
+          <div className="plates">
+            {featuredProjects.map((p) => (
+              <ProjectPlate key={p.slug} project={p} no={featuredNumber(p)!} total={total} />
             ))}
           </div>
-        </section>
-      </div>
-    </div>
+          <div className="idx-foot" data-boot>
+            <a className="mail" href={`mailto:${profile.contact.email}`}>
+              {profile.contact.email}
+            </a>
+            <a href={profile.contact.github} target="_blank" rel="noopener noreferrer">
+              GitHub ↗
+            </a>
+            <a href={profile.contact.blog} target="_blank" rel="noopener noreferrer">
+              velog ↗
+            </a>
+            <span>{profile.footNote}</span>
+          </div>
+        </div>
+      </IndexStage>
+    </section>
   );
 }

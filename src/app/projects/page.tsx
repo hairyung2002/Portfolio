@@ -1,23 +1,96 @@
 import type { Metadata } from "next";
-import { allProjects } from "@/content/projects";
-import { ProjectFilter } from "@/components/ProjectFilter";
+import Link from "next/link";
+import { featuredProjects } from "@/content/projects";
+import { otherProjects, type OtherProject } from "@/content/otherProjects";
+import { DepthScene } from "@/components/DepthScene";
+import { StatusBadge } from "@/components/StatusBadge";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "전체 프로젝트 목록 — 역할과 스택으로 필터링해 확인할 수 있습니다.",
+  description: "문제와 판단 과정까지 정리한 대표 프로젝트 4개와 그 외 프로젝트 목록.",
 };
 
-export default function ProjectsPage() {
+function OtherRow({ project }: { project: OtherProject }) {
+  const body = (
+    <>
+      <span>
+        <span className="pn">{project.name}</span>
+        <span className="pl">{project.line}</span>
+      </span>
+      <span className="pr">{project.role}</span>
+      <span className="pp">
+        {project.period && <span>{project.period}</span>}
+        {project.status && <span>{project.status}</span>}
+      </span>
+    </>
+  );
   return (
-    <div className="rail-x mx-auto flex max-w-5xl flex-col gap-10 px-6 py-16 sm:py-20">
-      <div className="flex flex-col gap-3 border-b border-border pb-8">
-        <span className="font-mono text-xs tracking-[0.15em] text-ink-muted uppercase">All Projects</span>
-        <h1 className="text-3xl font-bold text-ink">Projects</h1>
-        <p className="max-w-[60ch] text-[15px] leading-relaxed text-ink-muted">
-          운영 상태를 감추지 않습니다 — 운영 중인 서비스부터 설계 단계인 프로젝트까지 있는 그대로 표기합니다.
+    <li>
+      {project.slug ? (
+        <Link className="prow static" href={`/projects/${project.slug}`} data-row={project.slug}>
+          {body}
+          <span className="arr" aria-hidden="true">
+            →
+          </span>
+        </Link>
+      ) : (
+        <div className="prow static">
+          {body}
+          <span />
+        </div>
+      )}
+    </li>
+  );
+}
+
+export default function ProjectsPage() {
+  const count = (n: number) => String(n).padStart(2, "0");
+  return (
+    <section className="layer" aria-label="목록">
+      <DepthScene>
+        <p className="eyebrow" data-in>
+          PROJECTS · {count(featuredProjects.length + otherProjects.length)}
         </p>
-      </div>
-      <ProjectFilter projects={allProjects} />
-    </div>
+        <h1 className="lhead metal" data-in tabIndex={-1}>
+          Projects
+        </h1>
+
+        <h2 className="grp" data-in>
+          대표 프로젝트 <span className="mono">SELECTED · {count(featuredProjects.length)}</span>
+        </h2>
+        <p className="grp-note" data-in>
+          문제와 판단 과정까지 정리한 프로젝트입니다.
+        </p>
+        <ul className="plist" data-in>
+          {featuredProjects.map((p) => (
+            <li key={p.slug}>
+              <Link className="prow" href={`/projects/${p.slug}`} data-row={p.slug}>
+                <span>
+                  <span className="pn">{p.name}</span>
+                  <span className="pl">{p.line}</span>
+                </span>
+                <span className="pr">{p.role}</span>
+                <span className="pp">
+                  <span>{p.period}</span>
+                  <StatusBadge status={p.status} />
+                </span>
+                <span className="arr" aria-hidden="true">
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="grp" data-in>
+          그 외 프로젝트 <span className="mono">OTHERS · {count(otherProjects.length)}</span>
+        </h2>
+        <ul className="plist" data-in>
+          {otherProjects.map((o) => (
+            <OtherRow key={o.name} project={o} />
+          ))}
+        </ul>
+      </DepthScene>
+    </section>
   );
 }

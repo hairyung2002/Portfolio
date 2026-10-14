@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>곽도윤 포트폴리오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+[hidden]{display:none!important}body{margin:0}
+/* Layout: one viewport-height index (metal name + one line + four project plates); each plate zooms into a project layer, each decision zooms into a decision layer. Single dark look from the repo's Digital Industrial tokens. */
+:root{
+  color-scheme: dark;
+  --bg:#07080a; --surface:#0d0f12; --surface-2:#14171b;
+  --ink:#e9ebec; --ink-2:#c9cdd0; --metal:#b6babe; --muted:#9aa0a5;
+  --metal-dim:#33373c; --border:#23262b; --border-2:#2c3035; --bright:#e3e6e8;
+  --accent:#c7a876;
+  --active:#8fae96; --ended:#9aa0a5; --building:#b99b6b;
+  --sans:'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --gutter:clamp(20px, 4.5vw, 64px);
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg);overflow-x:clip}
+main{overflow-x:clip}
+body{color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.75;word-break:keep-all;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1px solid var(--accent);outline-offset:4px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.mono{font-family:var(--mono)}
+
+/* ambient light */
+.spot{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(640px circle at var(--mx,70%) var(--my,30%), rgba(183,188,192,.075), transparent 62%)}
+.scan{position:fixed;left:0;right:0;top:0;height:38vh;pointer-events:none;z-index:40;opacity:0;
+  background:linear-gradient(180deg, transparent 0%, rgba(227,230,232,0) 30%, rgba(227,230,232,.08) 46%, rgba(241,243,244,.55) 50%, rgba(227,230,232,.08) 54%, transparent 100%);
+  mix-blend-mode:screen;filter:blur(.5px)}
+.zoomer{position:fixed;z-index:30;pointer-events:none;border:1px solid var(--metal);
+  background:linear-gradient(180deg, rgba(20,23,27,.72), rgba(11,13,16,.72));
+  box-shadow:0 0 0 1px rgba(7,8,10,.6), inset 0 1px 0 rgba(241,243,244,.35)}
+
+/* top bar */
+.bar{position:fixed;left:0;right:0;top:0;z-index:50;padding:calc(env(safe-area-inset-top,0px) + 18px) var(--gutter) 18px;
+  display:flex;align-items:center;gap:20px;background:linear-gradient(180deg, rgba(7,8,10,.94) 55%, rgba(7,8,10,0))}
+.bar .home{font-weight:700;font-size:18px;letter-spacing:-.01em;white-space:nowrap}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-family:var(--mono);font-size:14px;color:var(--muted);min-width:0}
+.crumbs a:hover{color:var(--ink)}
+.crumbs .sep{color:var(--metal-dim)}
+.crumbs .cur{color:var(--ink)}
+.bar .back{margin-left:auto;display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 16px;border:1px solid var(--border-2);font-size:15px;font-weight:500}
+.bar .back:hover{border-color:var(--metal)}
+.bar .back[hidden]{display:none}
+.bar .back kbd{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bar .links{margin-left:auto;display:flex;gap:24px;font-size:15px;font-weight:500}
+.bar .back:not([hidden]) + .links{margin-left:0}
+.bar .links a:hover{color:var(--accent)}
+.bar .links a{display:inline-flex;align-items:center;min-height:44px}
+.bar .links a[aria-current="page"]{color:var(--accent)}
+.bar .links .sep2{width:1px;align-self:center;height:16px;background:var(--border-2)}
+
+main{position:relative;z-index:1}
+.layer{padding:clamp(96px,12vh,128px) var(--gutter) 96px}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* ── index ─────────────────────────────── */
+.hero{position:relative}
+#stage{position:relative}
+#stage.stacked .hero-in{transform-origin:50% 42%}
+#stage.stacked .idx-rest{position:absolute;inset:0;z-index:3;justify-content:center;padding-top:0}
+#stage.stacked .idx-tl{position:absolute;inset:0;z-index:2;padding-block:0}
+.idx-tl{display:flex;flex-direction:column;justify-content:center;gap:clamp(28px,5vh,56px);padding-block:96px 40px;transform-origin:50% 50%}
+.scene-title{margin:10px 0 0;font-size:clamp(30px,3.4vw,48px);line-height:1.15;font-weight:700;letter-spacing:-.03em}
+.tl-wrap{position:relative;height:clamp(340px,46vh,400px)}
+.tl-line{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,var(--metal-dim),var(--bright) 50%,var(--metal-dim));transform-origin:left center}
+.tl{list-style:none;margin:0;padding:0;height:100%;display:grid;grid-template-columns:repeat(var(--n,8),minmax(0,1fr))}
+.tl-item{position:relative}
+.tl-dot{position:absolute;left:0;top:50%;width:9px;height:9px;margin:-5px 0 0 -4px;transform:rotate(45deg);background:var(--bg);border:1px solid var(--metal)}
+.tl-item.proj .tl-dot{background:var(--accent);border-color:var(--accent)}
+.tl-stem{position:absolute;left:0;width:1px;height:30px;background:var(--border-2)}
+.tl-item.up .tl-stem{bottom:calc(50% + 6px)}
+.tl-item.down .tl-stem{top:calc(50% + 6px)}
+.tl-card{position:absolute;left:-4px;width:calc(200% - 18px);display:block}
+.tl-item.up .tl-card{bottom:calc(50% + 42px)}
+.tl-item.down .tl-card{top:calc(50% + 42px)}
+.tl-d{display:block;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.tl-item.proj .tl-d{color:var(--accent)}
+.tl-t{display:block;margin-top:6px;font-size:17px;font-weight:700;line-height:1.35;color:var(--ink)}
+.tl-s{display:block;margin-top:4px;font-size:14px;line-height:1.5;color:var(--metal)}
+a.tl-card:hover .tl-t{color:var(--accent)}
+.tl-legend{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:var(--muted)}
+.tl-legend span{display:inline-flex;align-items:center;gap:10px}
+.tl-legend i{display:inline-block;width:8px;height:8px;transform:rotate(45deg);border:1px solid var(--metal)}
+.tl-legend i.p{background:var(--accent);border-color:var(--accent)}
+.rest-head{display:flex;flex-direction:column}
+.idx-rest{transform-origin:50% 50%}
+.hero-in{min-height:calc(100vh - clamp(96px,12vh,128px));display:flex;flex-direction:column;justify-content:center;gap:clamp(22px,3.2vh,40px);padding-bottom:40px}
+.flow-line{position:absolute;left:5px;top:10px;bottom:10px;width:1px;background:linear-gradient(180deg,var(--metal-dim),var(--metal) 50%,var(--metal-dim));transform-origin:top}
+.idx-rest{display:flex;flex-direction:column;gap:clamp(28px,4vh,48px);padding-top:40px}
+.headline{margin:0;max-width:15.5em;font-size:clamp(36px,4.6vw,68px);line-height:1.18;font-weight:700;letter-spacing:-.035em;color:var(--ink)}
+.headline .hl{display:block;overflow:hidden;padding-bottom:.06em;margin-bottom:-.06em}
+.headline .hl-in{display:inline-block}
+.headline em{font-style:normal;color:var(--accent);
+  background:linear-gradient(105deg,#7d6747 0%,#b99b6b 18%,#f0dfb8 32%,#c7a876 46%,#6f5b3e 60%,#c7a876 74%,#ead6ab 86%,#9c8259 100%);
+  background-size:300% 100%;background-position:var(--gx,40%) 50%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cue{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:clamp(8px,2vh,24px);font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:var(--muted)}
+.cue button{display:inline-flex;align-items:center;gap:10px;min-height:44px;font:inherit;letter-spacing:inherit;color:inherit}
+.cue button:hover{color:var(--ink)}
+.cue .tick{display:inline-block;width:1px;height:28px;background:linear-gradient(180deg,transparent,var(--metal));transform-origin:top}
+.picker{position:fixed;right:var(--gutter);bottom:calc(env(safe-area-inset-bottom,0px) + 20px);z-index:60;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 14px;background:rgba(13,15,18,.92);border:1px solid var(--border-2);backdrop-filter:blur(8px);font-size:13px;color:var(--muted)}
+.picker span{margin-right:6px}
+.picker button{min-width:36px;min-height:36px;border:1px solid transparent;font-family:var(--mono);font-size:13px;color:var(--metal)}
+.picker button:hover{color:var(--ink)}
+.picker button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.idx-meta{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}
+.hair{height:1px;background:linear-gradient(90deg, transparent, var(--metal-dim) 15%, var(--bright) 50%, var(--metal-dim) 85%, transparent);transform-origin:50% 50%}
+.name{margin:0;font-size:clamp(80px,13vw,196px);line-height:.92;font-weight:700;letter-spacing:-.045em;white-space:nowrap}
+.name .ch{display:inline-block}
+.metal{color:var(--bright);
+  background:linear-gradient(105deg,#3f4348 0%,#8d9296 14%,#f1f3f4 26%,#a9aeb2 36%,#4b4f54 50%,#7c8186 60%,#e3e6e8 72%,#b6babe 82%,#555b60 100%);
+  background-size:320% 100%;background-position:var(--bx,30%) 50%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lede-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 48px}
+.lede{margin:0;max-width:640px;font-size:clamp(19px,1.7vw,23px);line-height:1.65;color:var(--ink-2);font-weight:500}
+.lede strong{color:var(--ink);font-weight:600}
+.en{font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.plates{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.plate{position:relative;display:flex;flex-direction:column;gap:12px;min-height:236px;padding:24px 24px 22px;overflow:hidden;
+  background:linear-gradient(180deg,#121519 0%,#0b0d10 100%);border:1px solid var(--border);transition:border-color .25s ease}
+.plate::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(241,243,244,.55) 50%,transparent)}
+.plate::after{content:"";position:absolute;inset:-20%;background:linear-gradient(105deg,transparent 42%,rgba(227,230,232,.11) 50%,transparent 58%);transform:translateX(-110%);transition:transform .9s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.plate:hover,.plate:focus-visible{border-color:#55595e}
+.plate:hover::after,.plate:focus-visible::after{transform:translateX(110%)}
+.p-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.status{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:14px;color:var(--metal)}
+.status i{width:7px;height:7px;border-radius:50%;background:var(--ended);flex:none}
+.status.active i{background:var(--active);box-shadow:0 0 10px rgba(143,174,150,.6)}
+.status.building i{background:var(--building)}
+.p-name{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-top:6px}
+.p-line{font-size:16px;line-height:1.65;color:var(--ink-2)}
+.p-go{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--muted);padding-top:12px;border-top:1px solid var(--border)}
+.plate:hover .p-go{color:var(--ink)}
+.idx-foot{display:flex;flex-wrap:wrap;gap:12px 28px;font-size:15px;color:var(--muted)}
+.idx-foot a{color:var(--metal)}
+.idx-foot a:hover{color:var(--accent)}
+.idx-foot .mail{user-select:all;font-family:var(--mono);font-size:14px}
+
+/* ── project layer ─────────────────────── */
+.eyebrow{margin:0;font-family:var(--mono);font-size:14px;letter-spacing:.06em;color:var(--muted)}
+.pname{margin:12px 0 0;font-size:clamp(56px,9vw,128px);line-height:1;font-weight:700;letter-spacing:-.04em}
+.insight{margin:28px 0 0;max-width:860px;font-size:clamp(23px,2.6vw,32px);line-height:1.45;font-weight:600;letter-spacing:-.015em;text-wrap:balance}
+.insight em{font-style:normal;color:var(--accent)}
+.facts{margin:48px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--metal-dim)}
+.facts div{padding:18px 24px 18px 0;border-bottom:1px solid var(--border)}
+.facts dt{font-size:14px;font-weight:600;color:var(--muted)}
+.facts dd{margin:6px 0 0;font-size:17px;line-height:1.55}
+.context{margin:44px 0 0;max-width:700px;font-size:19px;line-height:1.85;color:var(--ink-2)}
+.sec{margin:72px 0 20px;display:flex;align-items:baseline;gap:14px;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.sec .mono{font-size:13px;font-weight:400;letter-spacing:.08em;color:var(--muted)}
+.dlist{list-style:none;margin:0;padding:0;border-top:1px solid var(--metal-dim)}
+.drow{position:relative;display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:20px;padding:26px 8px 26px 0;border-bottom:1px solid var(--border);overflow:hidden}
+.drow::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(227,230,232,.07) 50%,transparent 60%);transform:translateX(-110%);transition:transform .8s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.drow:hover::after,.drow:focus-visible::after{transform:translateX(110%)}
+.dno{font-family:var(--mono);font-size:15px;color:var(--accent)}
+.dt{display:block;font-size:22px;font-weight:700;line-height:1.4;letter-spacing:-.01em}
+.ds{display:block;margin-top:4px;font-size:16px;color:var(--metal)}
+.arr{font-size:22px;color:var(--muted);transition:transform .25s ease,color .25s ease}
+.drow:hover .arr{transform:translateX(6px);color:var(--ink)}
+.outs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--metal-dim)}
+.outs li{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);font-size:18px;line-height:1.65}
+.outs li::before{content:"";flex:none;width:6px;height:6px;margin-top:.7em;background:var(--active);border-radius:50%}
+.pending{margin:16px 0 0;padding:18px 20px;border:1px dashed var(--border-2);font-size:17px;line-height:1.7;color:var(--metal)}
+.pending b{color:var(--building);font-weight:600}
+.pnav{margin-top:88px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;border-top:1px solid var(--metal-dim);padding-top:20px}
+.pnav a{display:flex;flex-direction:column;gap:4px;min-height:44px}
+.pnav a:last-child{text-align:right;align-items:flex-end}
+.pnav .k{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.pnav .v{font-size:19px;font-weight:600}
+.pnav a:hover .v{color:var(--accent)}
+
+/* ── decision layer ────────────────────── */
+.narrow{max-width:880px}
+.dtitle{margin:14px 0 0;font-size:clamp(32px,4.4vw,52px);line-height:1.25;font-weight:700;letter-spacing:-.03em;text-wrap:balance}
+.dsub{margin:14px 0 0;font-size:19px;color:var(--metal)}
+.flow{list-style:none;margin:56px 0 0;padding:0;position:relative}
+
+.step{position:relative;padding:0 0 44px 40px}
+.step::before{content:"";position:absolute;left:0;top:9px;width:11px;height:11px;border:1px solid var(--metal);background:var(--bg);transform:rotate(45deg)}
+.step.result::before{background:var(--accent);border-color:var(--accent)}
+.sk{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.sk .mono{font-size:13px;letter-spacing:.1em;color:var(--muted)}
+.sk b{font-size:16px;font-weight:600;color:var(--metal)}
+.step p{margin:0;max-width:700px;font-size:19px;line-height:1.85;color:var(--ink-2)}
+.step.result p{color:var(--ink)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;max-width:760px}
+.opt{display:flex;flex-direction:column;gap:6px;padding:18px 20px;border:1px solid var(--border-2);background:var(--surface)}
+.opt .ol{font-size:13px;font-weight:600;color:var(--muted)}
+.opt b{font-size:18px;line-height:1.45;font-weight:600;color:var(--metal)}
+.opt span:last-child{font-size:15px;line-height:1.6;color:var(--muted)}
+.opt.chosen{border-color:var(--accent);background:linear-gradient(180deg,rgba(199,168,118,.08),rgba(199,168,118,0))}
+.opt.chosen .ol{color:var(--accent)}
+.opt.chosen b{color:var(--ink)}
+
+/* ── projects list ─────────────────────── */
+.lhead{margin:12px 0 0;font-size:clamp(52px,8vw,112px);line-height:1;font-weight:700;letter-spacing:-.04em}
+.grp{margin:72px 0 16px;display:flex;align-items:baseline;gap:14px;font-size:22px;font-weight:700}
+.grp .mono{font-size:13px;font-weight:400;letter-spacing:.08em;color:var(--muted)}
+.grp-note{margin:-6px 0 20px;font-size:16px;color:var(--metal)}
+.plist{list-style:none;margin:0;padding:0;border-top:1px solid var(--metal-dim)}
+.prow{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 200px 190px 28px;gap:24px;align-items:center;padding:28px 0;border-bottom:1px solid var(--border);overflow:hidden}
+a.prow::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(227,230,232,.07) 50%,transparent 60%);transform:translateX(-110%);transition:transform .8s cubic-bezier(.4,0,.2,1);pointer-events:none}
+a.prow:hover::after,a.prow:focus-visible::after{transform:translateX(110%)}
+a.prow:hover .arr{transform:translateX(6px);color:var(--ink)}
+.pn{display:block;font-size:26px;font-weight:700;letter-spacing:-.015em;line-height:1.3}
+.prow.static .pn{font-size:21px}
+.pl{display:block;margin-top:6px;font-size:16px;line-height:1.65;color:var(--ink-2)}
+.pr{font-size:15px;line-height:1.5;color:var(--metal)}
+.pp{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted)}
+
+/* ── about ─────────────────────────────── */
+.ablock{display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px 40px;padding:40px 0;border-top:1px solid var(--border)}
+.ablock:first-of-type{border-top-color:var(--metal-dim)}
+.ablock h2{margin:0;font-size:18px;font-weight:600;color:var(--metal);line-height:1.6}
+.ablock ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.ablock li{display:flex;flex-wrap:wrap;gap:2px 28px;font-size:18px;line-height:1.6}
+.when{flex:0 0 190px;font-family:var(--mono);font-size:15px;color:var(--muted);padding-top:3px}
+.what{flex:1 1 320px;min-width:0}
+.what .sub{display:block;margin-top:2px;font-size:16px;color:var(--metal)}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stack div{display:flex;flex-wrap:wrap;gap:2px 28px;font-size:18px;line-height:1.6}
+.stack b{flex:0 0 190px;font-size:15px;font-weight:600;color:var(--muted);padding-top:2px}
+.stack span{flex:1 1 320px;min-width:0}
+.contact-mail{font-family:var(--mono);font-size:17px;user-select:all}
+
+/* ── threads ───────────────────────────── */
+.threads{list-style:none;margin:0;padding:0;border-top:1px solid var(--metal-dim)}
+.thr{position:relative;display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:20px;align-items:center;padding:24px 8px 24px 0;border-bottom:1px solid var(--border);overflow:hidden}
+.thr::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(227,230,232,.07) 50%,transparent 60%);transform:translateX(-110%);transition:transform .8s cubic-bezier(.4,0,.2,1);pointer-events:none}
+.thr:hover::after,.thr:focus-visible::after{transform:translateX(110%)}
+.thr:hover .arr{transform:translateX(6px);color:var(--ink)}
+.dir{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--accent)}
+.thr b{display:block;font-size:20px;font-weight:700;line-height:1.4}
+.thr .tx{display:block;margin-top:4px;font-size:16px;line-height:1.65;color:var(--ink-2)}
+
+/* ── project layer: 요약형 시안 ─────────────
+   요약이 먼저, 본문은 토글로 한 뎁스 아래. Dirvana에만 적용(시안용). */
+.facts.f4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.brief{margin:40px 0 0;border-top:1px solid var(--metal-dim)}
+.brief div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 24px;padding:20px 0;border-bottom:1px solid var(--border)}
+.brief dt{display:flex;align-items:baseline;gap:10px;font-size:16px;font-weight:600;color:var(--metal);padding-top:3px}
+.brief dt .mono{font-size:12px;font-weight:400;letter-spacing:.08em;color:var(--muted)}
+.brief dd{margin:0;max-width:820px;font-size:clamp(18px,1.7vw,21px);line-height:1.65;font-weight:500;color:var(--ink)}
+.brief dd em{font-style:normal;color:var(--accent)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--metal-dim)}
+.metric{padding:22px 24px 20px 0;border-bottom:1px solid var(--border)}
+.metric b{display:block;font-family:var(--mono);font-size:clamp(32px,3.6vw,48px);font-weight:500;line-height:1.1;letter-spacing:-.03em;color:var(--ink)}
+.metric span{display:block;margin-top:8px;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.metric small{display:block;margin-top:4px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--active)}
+.outs.tail{border-top:0}
+.sec-note{margin:-8px 0 20px;font-size:16px;color:var(--metal)}
+.dcards{list-style:none;margin:0;padding:0;border-top:1px solid var(--metal-dim)}
+.dcard{padding:28px 0 18px;border-bottom:1px solid var(--border)}
+.dc-head{display:grid;grid-template-columns:64px minmax(0,1fr);gap:20px;align-items:baseline}
+.dc-grid{margin:18px 0 0 84px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.dc-cell{display:flex;flex-direction:column;gap:6px;padding:16px 18px;border:1px solid var(--border-2);background:var(--surface)}
+.dc-cell .k{font-size:13px;font-weight:600;color:var(--muted)}
+.dc-cell b{font-size:16px;line-height:1.5;font-weight:600;color:var(--metal)}
+.dc-cell .dd{font-size:14px;line-height:1.55;color:var(--muted)}
+.dc-cell.pick{border-color:var(--accent);background:linear-gradient(180deg,rgba(199,168,118,.08),rgba(199,168,118,0))}
+.dc-cell.pick .k{color:var(--accent)}
+.dc-cell.pick b{color:var(--ink)}
+.dc-cell.cost{border-style:dashed}
+.dc-cell.cost .k{color:var(--building)}
+.dc-cell.cost b{font-weight:500;color:var(--ink-2)}
+.dc-tog{margin-top:12px;display:inline-flex;align-items:center;gap:10px;min-height:44px;font-size:15px;font-weight:500;color:var(--metal)}
+.dc-tog:hover{color:var(--ink)}
+.dc-tog i{display:inline-grid;place-items:center;width:20px;height:20px;border:1px solid var(--border-2);font-style:normal;font-family:var(--mono);font-size:13px;line-height:1;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.dc-tog[aria-expanded="true"] i{transform:rotate(45deg)}
+.dc-foot{margin-left:84px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 24px}
+.fold{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.16,1,.3,1)}
+.fold.open{grid-template-rows:1fr}
+.fold-in{min-height:0;overflow:hidden}
+.dc-flow{list-style:none;margin:10px 0 0 84px;padding:4px 0 0;border-left:1px solid var(--metal-dim)}
+.dc-flow li{position:relative;padding:0 0 22px 26px}
+.dc-flow li::before{content:"";position:absolute;left:-4px;top:9px;width:7px;height:7px;transform:rotate(45deg);border:1px solid var(--metal);background:var(--bg)}
+.dc-flow li:last-child::before{background:var(--accent);border-color:var(--accent)}
+.dc-flow .mono{margin-right:10px;font-size:12px;letter-spacing:.1em;color:var(--muted)}
+.dc-flow b{font-size:15px;font-weight:600;color:var(--metal)}
+.dc-flow p{margin:6px 0 0;max-width:680px;font-size:17px;line-height:1.8;color:var(--ink-2)}
+.dc-flow li:last-child p{color:var(--ink)}
+.dc-more{margin:0 0 10px 84px;display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:500;color:var(--accent)}
+.dc-more:hover{color:var(--ink)}
+.blist{list-style:none;margin:0;padding:0;border-top:1px solid var(--metal-dim)}
+.blist li{position:relative;padding:16px 0 16px 28px;border-bottom:1px solid var(--border);font-size:18px;line-height:1.65}
+.blist li::before{content:"";position:absolute;left:2px;top:calc(16px + .82em);width:12px;height:1px;background:var(--metal)}
+.fold-prose{max-width:700px;padding:18px 0 4px}
+.fold-prose p{margin:0 0 18px;font-size:17px;line-height:1.85;color:var(--ink-2)}
+
+/* ── 판단 카드 칸 시안 (cs-*) ────────────────
+   배치(기각 · 채택 · 대가 3칸)는 그대로, 칸 컴포넌트의 생김새만 바꾼다.
+   유니코드 기호(✕ ✓ △)는 폰트마다 다르게 그려져서 새 시안에선 CSS 도형이나 라벨로 대신한다. */
+.dc-cell .ke{display:none}
+.dc-cell .ic{margin-right:5px;font-style:normal}
+.dcards:not(.cs-cells) .dc-cell .ic{display:none}
+
+/* 태그: 라벨 오른쪽에 작은 영문 태그, 채택 칸은 윗변에만 금색 선 */
+.cs-tag .dc-cell{position:relative;gap:8px;padding:18px 20px 20px;border:1px solid var(--border);background:linear-gradient(180deg,#111418,#0c0e11)}
+.cs-tag .dc-cell::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:1px;background:var(--border-2)}
+.cs-tag .dc-cell.pick::before{height:2px;background:linear-gradient(90deg,var(--accent),rgba(199,168,118,.15))}
+.cs-tag .dc-cell .k{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.cs-tag .kl{font-size:13px;font-weight:600;color:var(--muted)}
+.cs-tag .ke{display:inline;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:#5d6267}
+.cs-tag .alt b{font-weight:500;color:var(--muted)}
+.cs-tag .pick{border-color:var(--border-2);background:linear-gradient(180deg,#15181c,#0e1013)}
+.cs-tag .pick .kl,.cs-tag .pick .ke{color:var(--accent)}
+.cs-tag .pick b{color:var(--ink)}
+.cs-tag .pick .dd{color:var(--ink-2)}
+.cs-tag .cost b{font-weight:500;color:var(--ink-2)}
+
+/* 인디케이터: 프로젝트 상태 점과 같은 계열의 작은 표시등 */
+.cs-led .dc-cell{gap:10px;padding:18px 20px 20px;border:1px solid var(--border);background:var(--surface)}
+.cs-led .dc-cell .k{display:flex;align-items:center;gap:10px}
+.cs-led .dc-cell .k::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:#4a4f55}
+.cs-led .pick .k::before{border-radius:0;transform:rotate(45deg);background:var(--accent);box-shadow:0 0 10px rgba(199,168,118,.55)}
+.cs-led .cost .k::before{border-radius:0;width:0;height:0;background:none;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:7px solid var(--building)}
+.cs-led .kl{font-size:13px;font-weight:600;color:var(--muted)}
+.cs-led .alt b{font-weight:500;color:var(--muted)}
+.cs-led .pick{border-color:#3a3e43;background:linear-gradient(180deg,#14171b,#0e1013)}
+.cs-led .pick .kl{color:var(--ink-2)}
+.cs-led .pick b{color:var(--ink)}
+.cs-led .pick .dd{color:var(--ink-2)}
+.cs-led .cost b{font-weight:500;color:var(--ink-2)}
+
+/* 레일: 상자 대신 세로 구분선. 영문 라벨이 위, 한글 라벨이 아래 */
+.cs-rail .dc-grid{gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.cs-rail .dc-cell{gap:8px;padding:18px 24px 22px;border:0;border-left:1px solid var(--border);background:none}
+.cs-rail .dc-cell:first-child{border-left:0;padding-left:0}
+.cs-rail .dc-cell .k{display:flex;flex-direction:column;gap:2px;margin-bottom:2px}
+.cs-rail .ke{display:block;order:-1;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:#5d6267}
+.cs-rail .kl{font-size:13px;font-weight:600;color:var(--muted)}
+.cs-rail .alt b{font-weight:500;color:var(--muted)}
+.cs-rail .pick{background:linear-gradient(180deg,rgba(199,168,118,.07),transparent 75%)}
+.cs-rail .pick .ke,.cs-rail .pick .kl{color:var(--accent)}
+.cs-rail .pick b{color:var(--ink)}
+.cs-rail .pick .dd{color:var(--ink-2)}
+.cs-rail .cost b{font-weight:500;color:var(--ink-2)}
+
+/* 금속 패널: 기각·대가는 눌려 들어간 판, 채택만 솟아오른 판(윗변 반사광) */
+.cs-inset .dc-cell{position:relative;gap:8px;padding:18px 20px 20px;border:1px solid #1a1d21;background:#090a0c;box-shadow:inset 0 2px 6px rgba(0,0,0,.65)}
+.cs-inset .kl{font-size:13px;font-weight:600;color:var(--muted)}
+.cs-inset .alt b{font-weight:500;color:var(--muted)}
+.cs-inset .alt .dd{opacity:.85}
+.cs-inset .pick{border-color:var(--border-2);background:linear-gradient(180deg,#1b1e23 0%,#111316 100%);box-shadow:0 14px 28px -16px rgba(0,0,0,.9),inset 0 1px 0 rgba(241,243,244,.12)}
+.cs-inset .pick::after{content:"";position:absolute;left:16px;right:16px;top:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(241,243,244,.55),transparent)}
+.cs-inset .pick .kl{color:var(--accent)}
+.cs-inset .pick b{color:var(--ink)}
+.cs-inset .pick .dd{color:var(--ink-2)}
+.cs-inset .cost{box-shadow:inset 2px 0 0 rgba(185,155,107,.55),inset 0 2px 6px rgba(0,0,0,.65)}
+.cs-inset .cost .kl{color:var(--building)}
+.cs-inset .cost b{font-weight:500;color:var(--ink-2)}
+
+@media (max-width:1040px){ .plates{grid-template-columns:repeat(2,minmax(0,1fr))} .facts.f4{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:640px){
+  body{font-size:17px}
+  .plates{grid-template-columns:1fr}
+  .plate{min-height:0}
+  .facts{grid-template-columns:1fr}
+  .drow{grid-template-columns:44px minmax(0,1fr) auto;gap:12px}
+  .dt{font-size:19px}
+  .bar{gap:12px}
+  .bar .links{gap:16px;font-size:14px}
+  .bar .links .ext,.bar .links .sep2{display:none}
+  .crumbs{display:none}
+  .bar .back kbd{display:none}
+  .bar .back{padding:0 12px}
+  .prow{grid-template-columns:minmax(0,1fr) 24px;gap:6px 12px}
+  .prow .pr,.prow .pp{grid-column:1}
+  .prow .pp{flex-direction:row;flex-wrap:wrap;gap:4px 14px}
+  .prow .arr{grid-column:2;grid-row:1}
+  .ablock{grid-template-columns:1fr;gap:16px}
+  .when,.stack b{flex-basis:100%}
+  .thr{grid-template-columns:minmax(0,1fr) 24px;gap:6px 12px}
+  .thr .dir{grid-column:1}
+  .thr .arr{grid-column:2;grid-row:1 / span 2}
+  .name{font-size:26vw}
+  .headline{font-size:clamp(30px,8.4vw,40px)}
+  .picker{left:16px;right:16px;justify-content:space-between}
+  .cue{margin-bottom:56px}
+  .tl-wrap{height:auto}
+  .tl{grid-template-columns:1fr;gap:26px;padding-left:28px}
+  .tl-line{left:4px;right:auto;top:6px;bottom:6px;width:1px;height:auto;transform-origin:top center;background:linear-gradient(180deg,var(--metal-dim),var(--bright) 50%,var(--metal-dim))}
+  .tl-dot{left:-28px;top:6px;margin:0}
+  .tl-stem{display:none}
+  .tl-card{position:static;width:auto}
+  .tl-t{font-size:17px}
+  .step{padding-left:30px}
+  .step p,.context{font-size:17px}
+  .facts.f4,.metrics{grid-template-columns:1fr}
+  .brief div{grid-template-columns:1fr}
+  .dc-head{grid-template-columns:44px minmax(0,1fr);gap:12px}
+  .dc-grid,.dc-flow,.dc-more,.dc-foot{margin-left:0}
+  .dc-grid{grid-template-columns:1fr}
+  .cs-rail .dc-cell{border-left:0;border-top:1px solid var(--border);padding-left:0}
+  .cs-rail .dc-cell:first-child{border-top:0}
+  .blist li{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  .plate::after,.drow::after,a.prow::after,.thr::after{display:none}
+  .arr,.fold,.dc-tog i{transition:none}
+}
+</style>
+
+<div class="spot" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="zoomer" aria-hidden="true" hidden></div>
+
+<div class="picker" id="picker" role="group" aria-label="대문장 후보 (시안용)"><span>대문장 후보</span></div>
+<div class="picker" id="dpicker" role="group" aria-label="상세 페이지 시안 (시안용)" hidden></div>
+<header class="bar">
+  <a class="home" href="#" data-nav>곽도윤</a>
+  <nav class="crumbs" aria-label="현재 위치" id="crumbs"></nav>
+  <button class="back" id="back" type="button" hidden>← 뒤로 <kbd>ESC</kbd></button>
+  <nav class="links" aria-label="메뉴">
+    <a href="#projects" id="nav-projects">Projects</a>
+    <a href="#about" id="nav-about">About</a>
+    <span class="sep2" aria-hidden="true"></span>
+    <a class="ext" href="https://github.com/hairyung2002" target="_blank" rel="noopener">GitHub ↗</a>
+    <a class="ext" href="https://velog.io/@hairyung2002/" target="_blank" rel="noopener">velog ↗</a>
+  </nav>
+</header>
+
+<main>
+  <section class="layer" id="L0" aria-label="개요">
+    <div class="wrap" id="stage">
+     <div class="hero">
+      <div class="hero-in">
+      <div class="idx-meta mono" data-boot><span>INDEX / 00</span><span>BACKEND-LEANING FULL-STACK ENGINEER</span></div>
+      <div class="hair" data-hair aria-hidden="true"></div>
+      <h1 class="name metal" id="name" aria-label="곽도윤"><span class="ch" aria-hidden="true">곽</span><span class="ch" aria-hidden="true">도</span><span class="ch" aria-hidden="true">윤</span></h1>
+      <h2 class="headline" id="headline"></h2>
+      <div class="lede-row">
+        <p class="lede" data-boot>동국대학교 정보통신공학 · 경영학 복수전공. 백엔드를 중심으로 프론트엔드와 인프라까지 다룹니다.</p>
+        <span class="en" data-boot>KWAK DOYOUN</span>
+      </div>
+      <div class="cue" data-boot><button type="button" id="cue"><span class="tick" aria-hidden="true"></span>SCROLL ↓</button></div>
+      </div>
+     </div>
+     <section class="idx-tl" aria-label="Activities">
+      <div class="rest-head">
+        <p class="eyebrow">ACTIVITIES · 2022 — 2026</p>
+        <h2 class="scene-title">Activities</h2>
+      </div>
+      <div class="tl-wrap"><span class="tl-line" aria-hidden="true"></span><ol class="tl" id="tl"></ol></div>
+     </section>
+     <div class="idx-rest" id="work-start">
+      <div class="rest-head">
+        <p class="eyebrow">SELECTED WORK · 04</p>
+        <h2 class="scene-title">Featured Projects</h2>
+      </div>
+      <div class="plates" id="plates"></div>
+      <div class="idx-foot" data-boot>
+        <span class="mail">kdoing2002@gmail.com</span>
+        <a href="https://github.com/hairyung2002" target="_blank" rel="noopener">GitHub ↗</a>
+        <a href="https://velog.io/@hairyung2002/" target="_blank" rel="noopener">velog ↗</a>
+        <span>멋쟁이사자처럼 14기 백엔드 트랙장 · PyCon 2026 연사</span>
+      </div>
+     </div>
+    </div>
+  </section>
+  <section class="layer" id="L1" aria-label="목록" hidden></section>
+  <section class="layer" id="L2" aria-label="프로젝트" hidden></section>
+  <section class="layer" id="L3" aria-label="판단" hidden></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const DATA = {
+  dirvana: {
+    no:'01', name:'Dirvana', period:'2025.09', status:'운영 종료', kind:'ended',
+    line:'축제 첫날 공격으로 멈춘 서비스를 당일 구조 전환으로 되살린 기록',
+    tag:'운영 · 장애 대응 · 인프라',
+    insight:'트래픽 때문에 죽은 줄 알았던 서버, 원인은 <em>SQLite Write Lock</em>이었습니다.',
+    role:'BE 파트 리더 · 인프라 전담',
+    context:'동국대 2025 가을축제 사이트입니다. 31명 팀에서 백엔드 8명을 이끌며 배포와 인프라 전체를 맡았습니다. 축제 첫날 두 차례의 L7 HTTP Flood로 서비스가 멈췄고, 그날 저녁 방어 구조를 바꿔 남은 이틀을 안정적으로 운영했습니다.',
+    outs:['3일 누적 활성 사용자 10,000명 이상, 최대 DAU 8,000명 (GA)','카드 매칭 게임 누적 참여 20,000회 이상 (GA)','2일차 재공격을 Edge에서 차단하고 이후 안정 운영'],
+    pending:null,
+    /* 요약형 시안: 먼저 보이는 요약. 본문(builtFull, lessonsFull)은 토글 아래 */
+    brief:{
+      team:'31명 팀 · 백엔드 8명 리드',
+      summary:[
+        {k:'문제', v:'보안 설정 없이 연 축제 첫날, 두 차례의 L7 HTTP Flood로 서비스가 멈췄습니다.'},
+        {k:'판단', v:'요청을 코드에서 거르는 대신 <em>서버 앞단(CloudFront + WAF)</em>에서 막았고, 축제가 끝난 뒤 로그를 다시 보며 진짜 원인인 <em>SQLite Write Lock</em>을 찾았습니다.'},
+        {k:'결과', v:'그날 저녁 구조를 바꿔, 남은 이틀을 안정적으로 운영했습니다.'}
+      ],
+      metrics:[
+        {v:'10,000+', l:'3일 누적 활성 사용자'},
+        {v:'8,000', l:'최대 DAU'},
+        {v:'20,000+', l:'카드 매칭 게임 누적 참여'}
+      ],
+      metricSrc:'GA 기준',
+      outsTail:['2일차 재공격을 Edge에서 차단하고 이후 안정 운영'],
+      built:[
+        '배포·인프라 전 영역 — EC2, CloudFront, WAF, ALB, RDS',
+        '카드 매칭 게임과 쿠폰 발급 — 교내 주점 주문 시스템과 API 연동',
+        'Gemini API 다국어 번역 — 교환학생 대상',
+        '좋아요·게임 중복 참여를 막는 세션 기반 사용자 식별 API',
+        'BE 파트 리드 — API 설계 방향, 일정, 기능 분배, 코드 리뷰'
+      ],
+      builtFull:[
+        'BE 파트 리더로서 API 설계 방향과 개발 일정을 관리하고, 기능별 구현 분배와 코드 리뷰를 맡았다. 배포·인프라 전 영역(EC2, CloudFront, WAF, ALB, RDS)도 직접 담당했다.',
+        '풀스택으로 직접 구현한 기능은 세 가지다. 카드 매칭 게임 이벤트는 성공 시 쿠폰을 지급하는 구조로, 교내 주점 주문 시스템과 API로 연동해 발급된 쿠폰을 조회·전달하도록 설계했다. Gemini API를 연동해 다국어 번역 기능을 제공했고, 좋아요·게임 중복 참여를 막기 위한 세션 기반 사용자 식별 API를 구현했다.',
+        '장애 대응 과정에서는 1차 공격 이후 IP 차단, Throttling, 도메인 변경을 순서대로 시도했다. 모두 임시방편에 그친 뒤, CloudFront + WAF 구조로 전환해 안정화시켰다. 2일차 오전 재공격 시도가 있었지만 CloudFront 단에서 차단됐고, 이후 서비스는 안정적으로 운영됐다.'
+      ],
+      lessons:[
+        '증상(서버 다운)과 원인(DB Lock)은 다를 수 있습니다. 급한 대응이 끝나도 로그를 다시 봅니다.',
+        '리더의 일은 대신 다 해내는 것이 아니라, 팀의 병목을 없애는 것입니다.',
+        '이상 트래픽은 사람이 발견하기 전에 알림(로깅 + 웹훅)이 먼저 와야 합니다.'
+      ],
+      lessonsFull:[
+        'SQLite는 근본적으로 프로덕션 동시 Write에 부적합한 구조였지만, 한 달이라는 프로젝트 기간 안에서는 RDBMS 마이그레이션 대신 CloudFront/WAF로 중복 요청 자체를 차단하는 방식으로 우회했다. 이때 인식한 한계는 이후 2026년 봄 축제 프로젝트에서 MySQL 볼륨 마운트 구조로 실제 전환하며 이어졌다.',
+        'BE 파트 리더로서 인프라 설계, 배포, 핵심 기능 구현, 장애 대응까지 대부분을 직접 담당했는데, 이는 프로젝트 전체가 리더 한 사람에게 과도하게 의존하는 구조를 만들었다. 리더의 역할은 \'대신 다 해내는 것\'이 아니라 \'팀원이 각자의 역할을 해낼 수 있도록 병목을 없애는 것\'이라는 걸 이 경험으로 배웠다.',
+        '장애를 인지한 계기도 팀원의 수동 발견이었다. 로깅과 웹훅을 연동해 이상 트래픽 발생 시 자동 알림이 오는 구조였다면, 장애 인지와 초기 대응 속도를 앞당길 수 있었을 것이다.'
+      ]
+    },
+    links:[
+      {dir:'이후', name:'2026 봄축제 사이트', text:'SQLite의 한계를 인식한 경험을 바탕으로 DB를 MySQL 볼륨 마운트 구조로 바꿨습니다.', href:'#projects'},
+      {dir:'이후', name:'동데이', text:'리더 혼자 모든 걸 떠안아 병목이 됐던 방식 대신, 역할을 나누고 조율에 집중했습니다.', href:'#projects'}
+    ],
+    decisions:[
+      {t:'공격은 서비스 앞단에서 막는다', s:'CloudFront + AWS WAF 다층 방어', cost:'임계값을 낮게 잡으면 정상 사용자도 차단됩니다.',
+       situation:'EC2 Public IP가 그대로 노출된 상태에서, 프론트를 거치지 않고 API를 직접 호출하는 요청이 초당 100~200회씩 들어왔습니다.',
+       optLabel:'선택', options:[{t:'EC2 노출 유지 + Django Throttle',d:'코드에서 요청 수를 제한'},{t:'CloudFront + WAF로 앞단 방어',d:'요청이 서버에 닿기 전에 걸러냄',c:1}],
+       reasoning:'IP 차단, DRF Throttle, 도메인 변경을 차례로 시도했지만 모두 임시방편이었습니다. Throttle은 Gunicorn Worker가 요청을 받은 뒤에 검사하므로 리소스 점유를 막지 못했고, 도메인을 바꿔도 Public IP로 바로 접근할 수 있었습니다.',
+       tradeoff:'임계값이 낮으면 정상 사용자도 차단됩니다. "5분간 IP당 100회 초과 시 차단"은 공격 전까지의 GA 활성 사용자 수와 정상 요청 빈도로 산출했습니다.',
+       result:'Client → CloudFront → WAF → ALB → EC2(Private) → RDS 구조로 바꾸고, EC2는 CloudFront IP 대역만 받도록 막았습니다. 2일차 재공격은 Edge에서 차단됐습니다.'},
+      {t:'다시 본 로그가 가리킨 진짜 원인', s:'사후 분석과 SQLite WAL 모드', cost:'읽기·쓰기 충돌은 줄지만, 쓰기끼리의 경합은 남습니다.',
+       situation:'당시엔 트래픽 과부하로 판단하고 EC2 재배포로 복구했습니다. 축제가 끝난 뒤 DB 로그를 다시 확인했습니다.',
+       optLabel:'지금이라면', options:[{t:'RDBMS로 전면 마이그레이션',d:'동시 쓰기 문제를 근본적으로 해결'},{t:'SQLite WAL 모드부터 전환',d:'운영 중에도 위험이 낮은 즉시 조치',c:1}],
+       reasoning:'공격이 DB 쓰기 API에 몰리면서 파일 단위 Write Lock을 쓰는 SQLite에서 경합이 생겼고, database is locked 에러로 DB를 쓰는 기능 전체가 멈춘 것이었습니다. 운영 중인 서비스를 옮기는 일은 정합성과 중단 위험이 큽니다.',
+       tradeoff:'WAL 모드는 읽기와 쓰기의 충돌을 줄이지만 쓰기끼리의 경합까지 없애지는 못합니다. 축제처럼 즉시 대응해야 하는 상황의 1차 조치입니다.',
+       result:'당시엔 원인을 몰라 앞단 차단으로 우회했습니다. 이 회고는 2026 봄축제 사이트를 MySQL 볼륨 마운트 구조로 바꾸는 결정으로 이어졌습니다.'},
+      {t:'쿠폰 중복 지급은 서버가 막는다', s:'서버 발급 세션 ID로 사용자 식별', cost:'session storage의 값은 JS로 조작할 여지가 남습니다.',
+       situation:'카드 매칭 게임에 성공하면 주점 쿠폰이 발급됩니다. 중복 참여는 곧 쿠폰 중복 지급이었습니다.',
+       optLabel:'선택', options:[{t:'프론트엔드에서 참여 여부 관리'},{t:'서버가 세션 ID를 발급하고 검증',c:1}],
+       reasoning:'클라이언트가 보내는 값은 믿을 수 없고, 실제 가치가 오가는 로직은 서버에서 검증해야 한다고 판단했습니다.',
+       tradeoff:'세션 ID를 session storage에 저장해 JS로 조작할 여지가 남았습니다. 다시 설계한다면 위변조가 어려운 JWT 기반 비로그인 식별을 쓰겠습니다.',
+       result:'게임 중복 참여와 좋아요 중복은 막았지만, 완전한 위변조 방지는 남은 과제로 기록했습니다.'}
+    ]
+  },
+  promptplace: {
+    no:'02', name:'PromptPlace', period:'2025.07 ~ 현재', status:'운영 중', kind:'active',
+    line:'결제와 정산이 오가는 AI 프롬프트 마켓플레이스를 1년 넘게 운영 중',
+    tag:'커머스 · 결제 · 운영',
+    insight:'결제 검증은 SDK 결제가 끝난 뒤에만. <em>실행 순서를 코드로 보장</em>했습니다.',
+    role:'Frontend → 서버 파트 리더',
+    context:'생성형 AI 프롬프트를 사고파는 마켓플레이스입니다. 프론트엔드에서 결제, 판매자 정산, 관리자 기능을 맡았고, 지금은 서버 파트 리더로 실서비스를 운영하고 있습니다.',
+    outs:['2025년 7월부터 실서비스 운영 중 (promptplace.kr)','결제·정산·관리자 기능을 프론트엔드에서 엔드투엔드로 구현'],
+    pending:null,
+    links:[
+      {dir:'이후', name:'PyCon 2026 발표', text:'로컬에선 통과하고 운영에선 실패한 결제 문제를 「Green CI / Red Production」 발표로 정리했습니다.', href:'#about'}
+    ],
+    decisions:[
+      {t:'결제 순서를 코드로 강제한다', s:'콜백 기반 Promise 체이닝',
+       situation:'주문서 생성 → PortOne 결제창 → 결제 완료 → 서버 검증 순서여야 했는데, 운영 환경에서만 결제창이 뜨기도 전에 검증 요청이 나가 매번 결제 실패가 났습니다. 로컬에선 매번 정상이었습니다.',
+       optLabel:'선택', options:[{t:'환경 차이의 원인부터 규명',d:'원인을 찾는 동안 결제 장애가 계속됨'},{t:'실행 순서를 구조로 보장',d:'원인과 무관하게 증상을 제거',c:1}],
+       reasoning:'재현 패턴은 분명했습니다. 원인이 무엇이든 SDK 결제가 끝나기 전에는 서버 검증이 절대 나가지 않게 만들면 증상은 사라집니다.',
+       tradeoff:'로컬과 운영이 왜 다르게 동작했는지는 끝내 규명하지 못했습니다.',
+       result:'운영 환경에서 반복되던 결제 실패를 해소했고, 이 경험은 PyCon 2026 발표 「Green CI / Red Production」으로 이어졌습니다.'},
+      {t:'여러 PG를 하나의 인터페이스로', s:'PortOne SDK 채택',
+       situation:'실제 돈이 오가는 서비스라 신뢰할 수 있는 PG 연동이 필요했습니다.',
+       optLabel:'선택', options:[{t:'PG사 직접 연동'},{t:'PortOne SDK',c:1}],
+       reasoning:'팀 규모와 일정에서는 빠른 구현과 안정성이 우선이었고, 여러 PG를 하나의 인터페이스로 다룰 수 있었습니다.',
+       tradeoff:'결제 흐름이 외부 SDK의 동작에 기대게 됩니다. 결제 순서 문제도 이 경계에서 생겼습니다.',
+       result:'실제 운영할 수 있는 결제 기능을 구현했습니다.'},
+      {t:'누르는 즉시 반응하는 팔로우', s:'파생값에서 Optimistic Update로',
+       situation:'로그인 직후 메인에서 팔로우 상태가 틀리게 보였습니다. useState의 lazy initializer는 첫 렌더링에만 평가되는데, 그때 팔로잉 목록이 아직 도착하지 않아 false로 고정된 것이었습니다.',
+       optLabel:'시도한 순서', options:[{t:'useEffect로 동기화',d:'공용 mutation 훅의 관심사 분리가 흐려져 배제'},{t:'파생값으로 계산',d:'초기값은 해결, 클릭 후 리렌더링 전까지 반영 안 됨'},{t:'Optimistic Update',d:'캐시를 먼저 갱신해 즉시 반응',c:1}],
+       reasoning:'강제 리렌더링은 검색·정렬·필터 상태를 해쳐 배제했고, onMutate · onError · onSettled로 캐시를 먼저 바꾸는 방식을 택했습니다.',
+       tradeoff:'팀 구조상 onSettled에서 다시 불러오는 방식이 이미 정해져 있어, 즉시 반응 효과가 완전히 살지는 못했습니다.',
+       result:'초기값 문제는 해결했고, 반응 속도는 절충안으로 마무리했습니다.'}
+    ]
+  },
+  wilson: {
+    no:'03', name:'Wilson', period:'2026.06 ~', status:'개발 완료 · 검증 전', kind:'building',
+    line:'실시간 음성 대화와 무거운 AI 분석을 분리한 치매 돌봄 플랫폼',
+    tag:'AI 서비스 · 분산 구조',
+    insight:'실시간 대화와 무거운 분석을 <em>같은 길에 두지 않았습니다.</em>',
+    role:'PM · Backend · Mobile App',
+    context:'치매 당사자와 보호자를 함께 돌보는 음성 AI 플랫폼입니다. AI가 먼저 안부를 묻고, 대화 내용은 백그라운드에서 분석돼 보호자 대시보드로 전달됩니다. 백엔드와 앱을 맡았고, 프로젝트 중간에 PM 역할을 함께 맡게 되었습니다.',
+    outs:['2026 글로벌 피우다프로젝트 선정'],
+    pending:'<b>측정 전</b> · 개발은 완료했고, 응답 속도와 부하 처리 같은 성능 수치는 아직 측정하지 않았습니다.',
+    links:[
+      {dir:'이전', name:'Walking City', text:'자문 입장에서 지켜본 "동시 AI 요청 처리" 한계를, Wilson에서는 직접 구조를 제안하고 구현해 풀었습니다.', href:'#projects'}
+    ],
+    decisions:[
+      {t:'대화는 gRPC로, 분석은 큐로', s:'직접 제안한 분리 구조',
+       situation:'음성 대화는 즉시 응답해야 하지만, BERT 기반 치매 징후·감정 분석은 수 초가 걸리는 무거운 연산입니다.',
+       optLabel:'선택', options:[{t:'REST로 한 번에 처리',d:'분석이 끝날 때까지 대화가 대기'},{t:'gRPC 스트리밍 + 메시지 큐',d:'대화와 분석의 경로를 분리',c:1}],
+       reasoning:'답변을 형태소 단위로 끊어 스트리밍하면 체감 대기가 줄고, gRPC는 음성을 바이너리로 바로 전달해 파싱 부담이 없습니다. 분석은 대화가 끝나면 큐로 넘기고 즉시 응답합니다.',
+       tradeoff:'구성 요소와 운영 포인트가 늘어납니다. 큐는 형태소 조각의 순서 보장과 사용자 증가 시의 처리량을 함께 고려해 Kafka를 택했습니다.',
+       result:'분석 부하와 관계없이 대화가 이어지는 구조로 구현했습니다. 응답 속도는 아직 측정 전입니다.'},
+      {t:'침묵이 길어도 맥락을 잃지 않게', s:'Redis 세션의 Sliding Expiration',
+       situation:'고령 사용자는 대화 사이 침묵이 깁니다. 고정 TTL 세션이 대화 도중 만료되면서 LLM이 맥락을 잃었습니다.',
+       reasoning:'대화가 이어지는 동안에만 세션이 살아 있도록, 대화 입력 이벤트가 들어올 때마다 TTL을 연장하는 인터셉터를 만들었습니다.',
+       tradeoff:'입력마다 Redis에 쓰기가 한 번씩 더 생깁니다.',
+       result:'긴 침묵 뒤에도 대화 맥락이 유지됩니다.'},
+      {t:'한 연결에 몰리는 트래픽', s:'Headless Service + 클라이언트 Round Robin',
+       situation:'gRPC는 HTTP/2 연결 하나를 계속 재사용해서, AI 서버를 여러 개 띄워도 요청이 한 곳에 몰릴 수 있습니다.',
+       optLabel:'선택', options:[{t:'클러스터 L4 로드밸런서',d:'재사용되는 연결 안의 요청은 나누지 못함'},{t:'gRPC 클라이언트 Round Robin',d:'클라이언트가 직접 서버를 번갈아 선택',c:1}],
+       reasoning:'Headless Service로 모든 AI 서버 주소를 받아, Spring의 gRPC 클라이언트가 직접 번갈아 보내도록 설계했습니다.',
+       tradeoff:'서비스 메시 없이 해결하는 대신, 분산 로직이 클라이언트 설정에 들어갑니다.',
+       result:'설계를 마쳤고, 쿠버네티스 배포 후 실제 분산을 검증할 예정입니다.'}
+    ]
+  },
+  nexo: {
+    no:'04', name:'Nexo', period:'2026.05 ~', status:'구현 완료 · 측정 전', kind:'building',
+    line:'Nginx 라우팅을 멈추지 않고 교체하는 C 프록시 엔진과 웹 콘솔',
+    tag:'시스템 프로그래밍 · C',
+    insight:'라우팅 테이블을 <em>서비스 중단 없이</em> 갈아끼우는 문제를 다뤘습니다.',
+    role:'PO · 1인 개발',
+    context:'Nginx 설정이 부담스러운 개발자도 웹 콘솔에서 라우팅을 관리할 수 있게 하는 플랫폼입니다. 실제 Nginx와 직접 구현한 C 프록시 엔진 중 하나를 골라 쓸 수 있습니다. 학습과 역량 증명을 목적으로 한 개인 프로젝트입니다.',
+    outs:[],
+    pending:'<b>측정 전</b> · 구현은 마쳤고, wrk 부하 테스트와 ASan·Valgrind 메모리 검증은 아직 진행하지 않았습니다.',
+    links:[],
+    decisions:[
+      {t:'Nginx를 대체하지 않고 나란히', s:'어댑터 병행 구조',
+       situation:'직접 만든 C 엔진을 보여주는 것이 목적이지만, 검증된 Nginx의 안정성을 무시할 수는 없었습니다.',
+       optLabel:'선택', options:[{t:'자체 엔진만 제공'},{t:'Nginx와 자체 엔진을 어댑터로 병행',c:1}],
+       reasoning:'DataPlaneAdapter 인터페이스 아래 Nginx 어댑터와 자체 엔진 어댑터를 두고, 자체 엔진에는 실험 단계 표시를 붙였습니다.',
+       tradeoff:'두 어댑터를 함께 유지해야 하는 비용이 생깁니다.',
+       result:'초보자에게는 Nginx라는 안전망을 주고, 자체 엔진은 선택해서 써볼 수 있는 형태로 만들었습니다.'},
+      {t:'멈추지 않고 테이블을 교체한다', s:'rwlock 기반 포인터 교체',
+       situation:'라우팅을 바꿀 때 기존 연결을 끊지 않고 새 규칙을 바로 적용해야 했습니다.',
+       reasoning:'새 라우팅 테이블을 미리 메모리에 만든 뒤, 쓰기 잠금을 아주 짧게 걸고 포인터만 바꿉니다. 기존 연결은 그대로 두고 다음 요청부터 새 규칙이 적용됩니다.',
+       tradeoff:'교체된 옛 테이블을 다른 스레드가 아직 읽고 있을 수 있어서, 바로 해제하면 use-after-free가 납니다. 안전한 회수 시점을 정하는 것이 이 프로젝트의 핵심 난제입니다.',
+       result:'구현은 마쳤고, 교체 중 5xx 0%와 처리량 목표는 부하 테스트로 검증할 예정입니다.'},
+      {t:'상위 계층의 검증을 믿지 않는다', s:'C 엔진의 2차 방어 파싱',
+       situation:'NestJS에서 이미 입력을 검증하더라도, C 엔진이 그 결과를 그대로 믿으면 버퍼 오버플로 같은 메모리 문제로 이어질 수 있습니다.',
+       reasoning:'C 엔진에서도 고정 버퍼 크기를 미리 검사하고, 넘치면 400으로 거부합니다.',
+       tradeoff:'같은 검증이 두 번 일어납니다. 메모리 안전이 걸린 계층에서는 그 비용을 감수했습니다.',
+       result:'제어 계층과 데이터 계층이 서로의 검증에 기대지 않는 구조로 만들었습니다.'}
+    ]
+  }
+};
+const ORDER = ['dirvana','promptplace','wilson','nexo'];
+/* 대문장 후보: 줄바꿈은 \n, 강조는 *단어* */
+const HEADLINES = [
+  '실제 장애, 실제 결제,\n실제 사용자 앞에서\n*판단*해 온 엔지니어.',
+  '서버가 멈춘 날,\n*원인*을 끝까지 쫓았습니다.',
+  '화면에서 커널까지,\n한 층씩 *내려가는* 엔지니어.',
+  '운영되는 *시스템*을\n다루는 엔지니어.'
+];
+const TIMELINE = [
+  {d:'2022.09', t:"중앙봉사동아리 '길' 회장", s:'2023.02까지'},
+  {d:'2025.03', t:'멋쟁이사자처럼 13기', s:'백엔드 트랙 수료'},
+  {d:'2025.03', t:'UMC 8th', s:'Web 파트 수료'},
+  {d:'2025.08', t:'K-HTML 해커톤 우수상', s:'Walking City'},
+  {d:'2025.08', t:'UMC 9th 중앙운영진', s:'Web 파트'},
+  {d:'2026.01', t:'멋쟁이사자처럼 14기 백엔드 트랙장', s:'Spring Boot 커리큘럼 운영'},
+  {d:'2026.05', t:'ASBG in DGU', s:'1st General Member · 활동 중'},
+  {d:'2026.08', t:'PyCon 2026 연사', s:'Green CI / Red Production'},
+  {d:'2026.09', t:'공공 AX 서포터즈 1기', s:'활동 중'}
+];
+const OTHERS = [
+  {name:'운꿰사', line:'축제 사주 소개팅 서비스. 1차 런칭에서 공유 확산이 약하자, 소개팅 리텐션과 메일 알림에 집중하는 방향으로 바꿨습니다.', role:'PO · Backend', period:'2026.09', status:'운영 종료'},
+  {name:'2026 봄축제 사이트', line:'Dirvana 경험을 반영해 구조를 개선하고, DB를 MySQL 볼륨 마운트 구조로 전환했습니다.', role:'', period:'2026 봄', status:'운영 종료'},
+  {name:'동데이', line:'인디밴드 공연장 예약 플랫폼. 직접 공연장을 섭외해 검증한 뒤, 공연장 측 지불 의사가 없음을 확인하고 스스로 종료했습니다.', role:'팀 리더 · PM', period:'6주 프로그램', status:'종료 · 데모데이 대상'},
+  {name:'Walking City', line:'RAG 기반 산책 코스 추천. 동대문구 공공데이터로 범위를 좁혀 추천 품질을 높였습니다.', role:'Frontend · 설계 자문', period:'2025.08', status:'해커톤 우수상'},
+  {name:'2026 봄 동아리 박람회 사이트', line:'동국대 봄 동아리 박람회 정보를 제공하는 웹사이트.', role:'', period:'2026 봄', status:''},
+  {name:'Badang', line:'웹 크롤링과 생성형 AI를 활용한 소상공인 맞춤형 컨설팅 서비스.', role:'', period:'', status:''},
+  {name:'Portpolis', line:'React와 Express.js 기반의 개발자 포트폴리오 제작 서비스.', role:'', period:'', status:''},
+  {name:'ConnecTeamed', line:'팀 빌딩과 협업을 돕는 웹 서비스.', role:'', period:'', status:''},
+  {name:'AIoT 공모전', line:'AI와 IoT를 결합한 공모전 프로젝트에 풀스택으로 참여했습니다.', role:'Full-stack', period:'', status:''},
+  {name:'너굴선배', line:'REST API 설계를 익히기 위해 만든 Django 기반 첫 백엔드 프로젝트.', role:'Backend', period:'', status:''}
+];
+const ABOUT = {
+  edu:[{when:'2028.02 졸업예정', what:'동국대학교 정보통신공학전공', sub:'경영학과 복수전공'}],
+  act:[
+    {when:'2026.09 ~', what:'공공 AX 서포터즈 1기'},
+    {when:'2026.05 ~', what:'ASBG in DGU', sub:'1st General Member'},
+    {when:'2026.01 ~', what:'멋쟁이사자처럼 14기 백엔드 트랙장', sub:'Spring Boot 커리큘럼 운영'},
+    {when:'2025.08 ~ 2026.02', what:'UMC 9th 중앙운영진', sub:'Web 파트'},
+    {when:'2025.03 ~ 2025.12', what:'멋쟁이사자처럼 13기 백엔드 트랙 수료'},
+    {when:'2025.03 ~ 2025.08', what:'UMC 8th Web 파트 수료'},
+    {when:'2022.09 ~ 2023.02', what:'중앙봉사동아리 \'길\' 회장'}
+  ],
+  talk:[{when:'2026.08.15', what:'PyCon 2026 연사 「Green CI / Red Production」', sub:'테스트 코드가 프로덕트 품질을 보장하지 못하는 이유'}],
+  award:[
+    {when:'2025.08', what:'K-HTML 해커톤 우수상', sub:'Walking City'},
+    {when:'', what:'교내 창업동아리 데모데이 대상', sub:'동데이'}
+  ],
+  stack:[
+    ['능숙','Django · NestJS · Spring Boot · React · AWS · Docker · PostgreSQL'],
+    ['사용 가능','React Native · Express.js · MongoDB · MySQL · gRPC'],
+    ['학습 중','Kubernetes']
+  ]
+};
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const L = [$('#L0'), $('#L1'), $('#L2'), $('#L3')];
+const G = window.gsap;
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ANIM = !!G && !REDUCED;
+const zoomer = $('.zoomer');
+const scan = $('.scan');
+
+/* ── headline ── */
+let hlIndex = 0;
+try { const v = +localStorage.getItem('hl'); if (HEADLINES[v]) hlIndex = v; } catch(e) {}
+function renderHeadline(){
+  const h = $('#headline');
+  h.setAttribute('aria-label', HEADLINES[hlIndex].replace(/\*/g,'').replace(/\n/g,' '));
+  h.innerHTML = HEADLINES[hlIndex].split('\n').map(line =>
+    `<span class="hl" aria-hidden="true"><span class="hl-in">${line.replace(/\*(.+?)\*/g,'<em>$1</em>')}</span></span>`).join('');
+}
+function playHeadline(delay){
+  if (!ANIM) return null;
+  const tl = G.timeline({delay:delay||0});
+  tl.from('#headline .hl-in', {yPercent:115, rotate:1.5, duration:1.05, stagger:.11, ease:'expo.out'})
+    .fromTo('#headline em', {'--gx':'0%'}, {'--gx':'100%', duration:1.6, ease:'power2.inOut'}, '-=.6');
+  return tl;
+}
+function renderPicker(){
+  const pk = $('#picker');
+  pk.innerHTML = '<span>대문장 후보</span>' + HEADLINES.map((_,i)=>`<button type="button" data-hl="${i}" aria-pressed="${i===hlIndex}">${i+1}</button>`).join('');
+}
+$('#picker').addEventListener('click', e => {
+  const b = e.target.closest('[data-hl]'); if (!b) return;
+  hlIndex = +b.dataset.hl;
+  try { localStorage.setItem('hl', hlIndex); } catch(e) {}
+  renderPicker(); renderHeadline();
+  if (scrollView === 'index'){ scrollTo(0,0); setupScroll('index', true); }
+  playHeadline();
+});
+renderHeadline(); renderPicker();
+
+/* ── 판단 카드 시안 비교 (시안용). 상세 구조는 요약형으로 확정. ── */
+const CARD_STYLES = [["tag","태그"], ["led","인디케이터"], ["rail","레일"], ["inset","금속 패널"], ["cells","기존"]];
+let cardStyle = 'tag';
+try { const v = localStorage.getItem('cs'); if (CARD_STYLES.some(([k]) => k === v)) cardStyle = v; } catch(e) {}
+function renderDPicker(){
+  $('#dpicker').innerHTML = '<span>판단 카드</span>' + CARD_STYLES.map(([k,l]) => `<button type="button" data-cs="${k}" aria-pressed="${k===cardStyle}">${l}</button>`).join('');
+}
+$('#dpicker').addEventListener('click', e => {
+  const b = e.target.closest('[data-cs]'); if (!b) return;
+  cardStyle = b.dataset.cs;
+  try { localStorage.setItem('cs', cardStyle); } catch(e) {}
+  renderDPicker();
+  if (cur.view === 'project'){ teardownScroll(); renderProject(cur.pid); scrollTo(0,0); setupScroll('project', true); }
+});
+renderDPicker();
+
+/* 토글: 요약 아래 한 뎁스 더. 닫혀 있는 본문은 inert로 탭 순서·스크린리더에서 뺀다. */
+let foldTimer = 0;
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-tog]'); if (!b) return;
+  const body = document.getElementById(b.getAttribute('aria-controls'));
+  const open = b.getAttribute('aria-expanded') !== 'true';
+  b.setAttribute('aria-expanded', String(open));
+  const label = b.querySelector('.tg-l');
+  if (label) label.textContent = open ? '접기' : b.dataset.label;
+  body.classList.toggle('open', open);
+  body.inert = !open;
+  // 높이가 바뀌었으니 스크롤 장면 위치를 다시 잰다
+  clearTimeout(foldTimer);
+  foldTimer = setTimeout(() => { if (window.ScrollTrigger) ScrollTrigger.refresh(); }, REDUCED ? 0 : 560);
+});
+$('#cue').addEventListener('click', () => {
+  if (indexST) scrollTo({top: indexST.start + (indexST.end - indexST.start) * .56, behavior: REDUCED ? 'auto' : 'smooth'});
+  else $('.idx-tl').scrollIntoView({behavior: REDUCED ? 'auto' : 'smooth'});
+});
+
+function renderTimeline(){
+  $('#tl').style.setProperty('--n', TIMELINE.length + 1);
+  $('#tl').innerHTML = TIMELINE.map((e,i) => {
+    const inner = `<span class="tl-d">${e.d}</span><span class="tl-t">${e.t}</span>${e.s ? `<span class="tl-s">${e.s}</span>` : ''}`;
+    return `<li class="tl-item ${i % 2 ? 'down' : 'up'}"><span class="tl-dot" aria-hidden="true"></span><span class="tl-stem" aria-hidden="true"></span>${e.href ? `<a class="tl-card" href="${e.href}">${inner}</a>` : `<div class="tl-card">${inner}</div>`}</li>`;
+  }).join('');
+}
+renderTimeline();
+
+/* ── render ── */
+function statusHTML(p){ return `<span class="status ${p.kind}"><i aria-hidden="true"></i>${p.status}</span>`; }
+
+$('#plates').innerHTML = ORDER.map(id => { const p = DATA[id]; return `
+  <a class="plate" href="#${id}" data-plate="${id}">
+    <span class="p-top"><span>${p.no} / 04</span>${statusHTML(p)}</span>
+    <span class="p-name">${p.name}</span>
+    <span class="p-line">${p.line}</span>
+    <span class="p-go"><span>${p.tag}</span><span aria-hidden="true">→</span></span>
+  </a>`; }).join('');
+
+function renderList(){
+  const row = o => `<li><div class="prow static"><span><span class="pn">${o.name}</span><span class="pl">${o.line}</span></span><span class="pr">${o.role}</span><span class="pp">${o.period?`<span>${o.period}</span>`:''}${o.status?`<span>${o.status}</span>`:''}</span><span></span></div></li>`;
+  L[1].innerHTML = `<div class="wrap">
+    <p class="eyebrow" data-in>PROJECTS · ${ORDER.length + OTHERS.length}</p>
+    <h1 class="lhead metal" data-in tabindex="-1">Projects</h1>
+    <h2 class="grp" data-in>대표 프로젝트 <span class="mono">SELECTED · ${ORDER.length}</span></h2>
+    <p class="grp-note" data-in>문제와 판단 과정까지 정리한 프로젝트입니다.</p>
+    <ul class="plist" data-in>${ORDER.map(id => { const p = DATA[id]; return `
+      <li><a class="prow" href="#${id}" data-row="${id}">
+        <span><span class="pn">${p.name}</span><span class="pl">${p.line}</span></span>
+        <span class="pr">${p.role}</span>
+        <span class="pp"><span>${p.period}</span>${statusHTML(p)}</span>
+        <span class="arr" aria-hidden="true">→</span></a></li>`; }).join('')}</ul>
+    <h2 class="grp" data-in>그 외 프로젝트 <span class="mono">OTHERS · ${OTHERS.length}</span></h2>
+    <ul class="plist" data-in>${OTHERS.map(row).join('')}</ul>
+  </div>`;
+}
+
+function renderAbout(){
+  const items = arr => `<ul>${arr.map(i=>`<li><span class="when">${i.when}</span><span class="what">${i.what}${i.sub?`<span class="sub">${i.sub}</span>`:''}</span></li>`).join('')}</ul>`;
+  L[1].innerHTML = `<div class="wrap">
+    <p class="eyebrow" data-in>ABOUT</p>
+    <h1 class="lhead metal" data-in tabindex="-1">About</h1>
+    <div style="margin-top:56px">
+      <section class="ablock" data-in><h2>학력</h2>${items(ABOUT.edu)}</section>
+      <section class="ablock" data-in><h2>활동</h2>${items(ABOUT.act)}</section>
+      <section class="ablock" data-in><h2>발표</h2>${items(ABOUT.talk)}</section>
+      <section class="ablock" data-in><h2>수상</h2>${items(ABOUT.award)}</section>
+      <section class="ablock" data-in><h2>기술</h2><div class="stack">${ABOUT.stack.map(([k,v])=>`<div><b>${k}</b><span>${v}</span></div>`).join('')}</div></section>
+      <section class="ablock" data-in><h2>연락</h2><ul>
+        <li><span class="when">Email</span><span class="what contact-mail">kdoing2002@gmail.com</span></li>
+        <li><span class="when">GitHub</span><span class="what"><a href="https://github.com/hairyung2002" target="_blank" rel="noopener">github.com/hairyung2002 ↗</a></span></li>
+        <li><span class="when">Blog</span><span class="what"><a href="https://velog.io/@hairyung2002/" target="_blank" rel="noopener">velog.io/@hairyung2002 ↗</a></span></li>
+      </ul></section>
+    </div>
+  </div>`;
+}
+
+function renderProject(id){
+  if (DATA[id].brief) return renderProjectBrief(id);
+  const p = DATA[id], i = ORDER.indexOf(id), next = ORDER[(i+1) % ORDER.length];
+  L[2].innerHTML = `<div class="wrap">
+    <p class="eyebrow" data-in>PROJECT ${p.no} / 04 · ${p.period}</p>
+    <h1 class="pname metal" data-in tabindex="-1">${p.name}</h1>
+    <p class="insight" data-in>${p.insight}</p>
+    <dl class="facts" data-in>
+      <div><dt>역할</dt><dd>${p.role}</dd></div>
+      <div><dt>기간</dt><dd>${p.period}</dd></div>
+      <div><dt>상태</dt><dd>${statusHTML(p)}</dd></div>
+    </dl>
+    <p class="context" data-in>${p.context}</p>
+    <h2 class="sec" data-in>결과 <span class="mono">OUTCOME</span></h2>
+    <div data-in>${p.outs.length ? `<ul class="outs">${p.outs.map(o=>`<li>${o}</li>`).join('')}</ul>` : ''}${p.pending ? `<p class="pending">${p.pending}</p>` : ''}</div>
+    <h2 class="sec" data-in>핵심 판단 <span class="mono">DECISIONS</span></h2>
+    <ol class="dlist" data-in>${p.decisions.map((d,k)=>`
+      <li><a class="drow" href="#${id}-d${k+1}" data-dec="${k+1}">
+        <span class="dno">D${k+1}</span>
+        <span><span class="dt">${d.t}</span><span class="ds">${d.s}</span></span>
+        <span class="arr" aria-hidden="true">→</span></a></li>`).join('')}</ol>
+    ${p.links.length ? `<h2 class="sec" data-in>이어진 것 <span class="mono">THREADS</span></h2>
+    <ul class="threads" data-in>${p.links.map(l=>`
+      <li><a class="thr" href="${l.href}"><span class="dir">${l.dir === '이전' ? '← 이전' : '이후 →'}</span>
+        <span><b>${l.name}</b><span class="tx">${l.text}</span></span>
+        <span class="arr" aria-hidden="true">→</span></a></li>`).join('')}</ul>` : ''}
+    <nav class="pnav" data-in aria-label="프로젝트 이동">
+      <a href="#projects"><span class="k">← PROJECTS</span><span class="v">전체 프로젝트</span></a>
+      <a href="#${next}"><span class="k">NEXT PROJECT →</span><span class="v">${DATA[next].name}</span></a>
+    </nav></div>`;
+}
+
+/* 요약형 상세: 한 줄 결론 → 사실 → 요약 3줄 → 결과 → 판단 카드(펼치면 전문) → 직접 한 일 → 배운 것 → 이어진 것 */
+function togHTML(key, label){
+  return `<button type="button" class="dc-tog" data-tog aria-expanded="false" aria-controls="fold-${key}" data-label="${label}"><span class="tg-l">${label}</span><i aria-hidden="true">+</i></button>`;
+}
+function foldBodyHTML(key, inner){
+  return `<div class="fold" id="fold-${key}" inert><div class="fold-in">${inner}</div></div>`;
+}
+function foldHTML(key, label, inner){ return togHTML(key, label) + foldBodyHTML(key, inner); }
+
+/* 판단 카드 칸. 시안마다 마크업은 같고 CSS(cs-*)만 다르다. ic는 기존 시안의 기호, ke는 영문 태그. */
+const optText = o => `<b>${o.t}</b>${o.d ? `<span class="dd">${o.d}</span>` : ''}`;
+const cellLabel = (ic, ko, en) => `<span class="k"><i class="ic" aria-hidden="true">${ic}</i><span class="kl">${ko}</span><span class="ke" aria-hidden="true">${en}</span></span>`;
+function cellsHTML(d, {pick, alts, pickLabel}){
+  return `<div class="dc-grid">
+      ${alts.map(o => `<div class="dc-cell alt">${cellLabel('✕', '버린 것', 'REJECTED')}${optText(o)}</div>`).join('')}
+      ${pick ? `<div class="dc-cell pick">${cellLabel('✓', pickLabel, pickLabel === '지금이라면' ? 'IN HINDSIGHT' : 'ADOPTED')}${optText(pick)}</div>` : ''}
+      <div class="dc-cell cost">${cellLabel('△', '대가', 'COST')}<b>${d.cost}</b></div></div>`;
+}
+
+function renderProjectBrief(id){
+  const p = DATA[id], b = p.brief, i = ORDER.indexOf(id), next = ORDER[(i+1) % ORDER.length];
+  const card = (d, k) => {
+    const n = k + 1, opts = d.options || [];
+    const parts = { pick: opts.find(o => o.c), alts: opts.filter(o => !o.c), pickLabel: d.optLabel === '지금이라면' ? '지금이라면' : '고른 것' };
+    const flow = [['SITUATION','상황',d.situation],['REASONING','근거',d.reasoning],['TRADEOFF','트레이드오프',d.tradeoff],['RESULT','결과',d.result]]
+      .map(([en,ko,t]) => `<li><span class="mono">${en}</span><b>${ko}</b><p>${t}</p></li>`).join('');
+    return `<li class="dcard" data-in data-dec="${n}">
+      <div class="dc-head"><span class="dno">D${n}</span><span><span class="dt">${d.t}</span><span class="ds">${d.s}</span></span></div>
+      ${cellsHTML(d, parts)}
+      <div class="dc-foot">${togHTML(`d${n}`, '상황 · 근거 · 결과 펼치기')}</div>
+      ${foldBodyHTML(`d${n}`, `<ol class="dc-flow">${flow}</ol><a class="dc-more" href="#${id}-d${n}">판단 페이지에서 보기 →</a>`)}
+    </li>`;
+  };
+  const prose = paras => `<div class="fold-prose">${paras.map(t => `<p>${t}</p>`).join('')}</div>`;
+  L[2].innerHTML = `<div class="wrap">
+    <p class="eyebrow" data-in>PROJECT ${p.no} / 04 · ${p.period}</p>
+    <h1 class="pname metal" data-in tabindex="-1">${p.name}</h1>
+    <p class="insight" data-in>${p.insight}</p>
+    <dl class="facts f4" data-in>
+      <div><dt>역할</dt><dd>${p.role}</dd></div>
+      <div><dt>팀</dt><dd>${b.team}</dd></div>
+      <div><dt>기간</dt><dd>${p.period}</dd></div>
+      <div><dt>상태</dt><dd>${statusHTML(p)}</dd></div>
+    </dl>
+    <dl class="brief" data-in>${b.summary.map((s,j) => `<div><dt><span class="mono">0${j+1}</span>${s.k}</dt><dd>${s.v}</dd></div>`).join('')}</dl>
+    <h2 class="sec" data-in>결과 <span class="mono">OUTCOME</span></h2>
+    <div data-in>
+      <div class="metrics">${b.metrics.map(m => `<div class="metric"><b>${m.v}</b><span>${m.l}</span><small>${b.metricSrc}</small></div>`).join('')}</div>
+      <ul class="outs tail">${b.outsTail.map(o => `<li>${o}</li>`).join('')}</ul>
+    </div>
+    <h2 class="sec" data-in>핵심 판단 <span class="mono">DECISIONS</span></h2>
+    <p class="sec-note" data-in>무엇을 버리고 무엇을 골랐는지 먼저 보여드립니다. 펼치면 상황과 근거 전문이 나옵니다.</p>
+    <ol class="dcards cs-${cardStyle}">${p.decisions.map(card).join('')}</ol>
+    <h2 class="sec" data-in>직접 한 일 <span class="mono">OWNERSHIP</span></h2>
+    <div data-in><ul class="blist">${b.built.map(t => `<li>${t}</li>`).join('')}</ul>${foldHTML('built', '구현 기록 전체 펼치기', prose(b.builtFull))}</div>
+    <h2 class="sec" data-in>배운 것 <span class="mono">LESSONS</span></h2>
+    <div data-in><ul class="blist">${b.lessons.map(t => `<li>${t}</li>`).join('')}</ul>${foldHTML('lessons', '회고 전문 펼치기', prose(b.lessonsFull))}</div>
+    ${p.links.length ? `<h2 class="sec" data-in>이어진 것 <span class="mono">THREADS</span></h2>
+    <ul class="threads" data-in>${p.links.map(l=>`
+      <li><a class="thr" href="${l.href}"><span class="dir">${l.dir === '이전' ? '← 이전' : '이후 →'}</span>
+        <span><b>${l.name}</b><span class="tx">${l.text}</span></span>
+        <span class="arr" aria-hidden="true">→</span></a></li>`).join('')}</ul>` : ''}
+    <nav class="pnav" data-in aria-label="프로젝트 이동">
+      <a href="#projects"><span class="k">← PROJECTS</span><span class="v">전체 프로젝트</span></a>
+      <a href="#${next}"><span class="k">NEXT PROJECT →</span><span class="v">${DATA[next].name}</span></a>
+    </nav></div>`;
+}
+
+function renderDecision(id, k){
+  const p = DATA[id], d = p.decisions[k-1], n = p.decisions.length;
+  const nk = k < n ? k+1 : null;
+  const opts = d.options ? `<li class="step" data-in><span class="sk"><span class="mono">02 OPTIONS</span><b>선택지</b></span>
+      <div class="opts">${d.options.map(o=>`<div class="opt${o.c?' chosen':''}"><span class="ol">${o.c ? d.optLabel : '대안'}</span><b>${o.t}</b>${o.d?`<span>${o.d}</span>`:''}</div>`).join('')}</div></li>` : '';
+  const no = d.options ? ['03','04','05'] : ['02','03','04'];
+  L[3].innerHTML = `<div class="wrap narrow">
+    <p class="eyebrow" data-in>DECISION ${k} / ${n} · ${p.name.toUpperCase()}</p>
+    <h1 class="dtitle" data-in tabindex="-1">${d.t}</h1>
+    <p class="dsub" data-in>${d.s}</p>
+    <ol class="flow"><span class="flow-line" aria-hidden="true"></span>
+      <li class="step" data-in><span class="sk"><span class="mono">01 SITUATION</span><b>상황</b></span><p>${d.situation}</p></li>
+      ${opts}
+      <li class="step" data-in><span class="sk"><span class="mono">${no[0]} REASONING</span><b>근거</b></span><p>${d.reasoning}</p></li>
+      <li class="step" data-in><span class="sk"><span class="mono">${no[1]} TRADEOFF</span><b>트레이드오프</b></span><p>${d.tradeoff}</p></li>
+      <li class="step result" data-in><span class="sk"><span class="mono">${no[2]} RESULT</span><b>결과</b></span><p>${d.result}</p></li>
+    </ol>
+    <nav class="pnav" data-in aria-label="판단 이동">
+      <a href="#${id}"><span class="k">← PROJECT</span><span class="v">${p.name}로</span></a>
+      ${nk ? `<a href="#${id}-d${nk}"><span class="k">NEXT DECISION →</span><span class="v">D${nk} ${p.decisions[nk-1].t}</span></a>` : `<a href="#${ORDER[(ORDER.indexOf(id)+1)%ORDER.length]}"><span class="k">NEXT PROJECT →</span><span class="v">${DATA[ORDER[(ORDER.indexOf(id)+1)%ORDER.length]].name}</span></a>`}
+    </nav></div>`;
+}
+
+function renderChrome(st){
+  const c = $('#crumbs'); const sep = '<span class="sep">/</span>';
+  const parts = ['<a href="#" class="mono">INDEX</a>'];
+  if (st.view === 'about') parts.push(sep, '<span class="cur">About</span>');
+  if (st.view === 'projects') parts.push(sep, '<span class="cur">Projects</span>');
+  if (st.pid) parts.push(sep, '<a href="#projects">Projects</a>', sep, st.k ? `<a href="#${st.pid}">${DATA[st.pid].name}</a>` : `<span class="cur">${DATA[st.pid].name}</span>`);
+  if (st.k) parts.push(sep, `<span class="cur">D${st.k}</span>`);
+  c.innerHTML = parts.join(' ');
+  $('#back').hidden = st.view === 'index';
+  const inProjects = ['projects','project','decision'].includes(st.view);
+  $('#nav-projects').toggleAttribute('aria-current', false); $('#nav-about').toggleAttribute('aria-current', false);
+  if (inProjects) $('#nav-projects').setAttribute('aria-current','page');
+  if (st.view === 'about') $('#nav-about').setAttribute('aria-current','page');
+}
+
+/* ── routing ── */
+function parse(h){
+  h = (h||'').replace(/^#/,'');
+  if (h === 'projects' || h === 'about') return {view:h, pid:null, k:null};
+  const m = h.match(/^([a-z]+)(?:-d([1-3]))?$/);
+  if (!m || !DATA[m[1]]) return {view:'index', pid:null, k:null};
+  const k = m[2] && DATA[m[1]].decisions[+m[2]-1] ? +m[2] : null;
+  return {view: k ? 'decision' : 'project', pid:m[1], k};
+}
+const DEPTH = {index:0, projects:1, about:1, project:2, decision:3};
+const depth = st => DEPTH[st.view];
+const parentHash = st => st.view === 'decision' ? `#${st.pid}` : st.view === 'project' ? '#projects' : '#';
+let cur = {view:'index',pid:null,k:null}, busy = false, queued = null, lastSrc = null;
+const scrollMem = [0,0,0,0];
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  // 판단 카드 안의 링크면 카드 전체에서 줌이 시작되게
+  if (a) lastSrc = a.closest('[data-dec]') || a;
+}, true);
+
+function show(st){
+  const d = depth(st);
+  if (st.view==='projects') renderList();
+  if (st.view==='about') renderAbout();
+  if (st.view==='project') renderProject(st.pid);
+  if (st.view==='decision') renderDecision(st.pid, st.k);
+  L.forEach((el,i)=>{ el.hidden = i!==d; });
+  $('#picker').hidden = st.view !== 'index';
+  $('#dpicker').hidden = !(st.view === 'project' && DATA[st.pid].brief);
+  renderChrome(st);
+}
+
+function rectOf(el){
+  if (el && el.getClientRects().length){ const r = el.getBoundingClientRect(); if (r.width>0) return r; }
+  const w = innerWidth*.3, h = innerHeight*.3; return {left:(innerWidth-w)/2, top:(innerHeight-h)/2, width:w, height:h};
+}
+
+function scanTween(){
+  return G.fromTo(scan, {y:-innerHeight*0.4, opacity:1}, {y:innerHeight*1.05, duration:.9, ease:'power2.inOut', onComplete:()=>G.set(scan,{opacity:0})});
+}
+
+function revealIn(layer){
+  // only what is on screen now; the rest is revealed by scroll
+  const vis = $$('[data-in]', layer).filter(el => el.getBoundingClientRect().top < innerHeight * .92);
+  return G.fromTo(vis, {opacity:0, y:26}, {opacity:1, y:0, duration:.7, stagger:.055, ease:'expo.out', clearProps:'opacity,transform'});
+}
+
+/* ── scroll scenes ── */
+const ST = window.ScrollTrigger;
+if (G && ST) G.registerPlugin(ST);
+let scrollCtx = null, scrollView = null;
+function teardownScroll(){ if (scrollCtx){ scrollCtx.revert(); scrollCtx = null; } scrollView = null; }
+function setupScroll(view, force){
+  if (!ANIM || !ST) return;
+  if (scrollView === view && !force) return;
+  teardownScroll();
+  scrollView = view;
+  scrollCtx = G.context(() => { view === 'index' ? setupIndex() : setupLayer(L[DEPTH[view]]); });
+  ST.refresh();
+}
+let indexST = null;
+function setupIndex(){
+  const mm = G.matchMedia();
+  // desktop/tablet: one pinned stage, the camera flies through the hero and the work scene arrives from depth
+  mm.add('(min-width: 641px)', () => {
+    const stage = $('#stage'), hero = $('.hero-in'), tls = $('.idx-tl'), rest = $('.idx-rest');
+    stage.classList.add('stacked');
+    G.set([tls, rest], {opacity:0, scale:.55, filter:'blur(18px)'});
+    G.set('.plate', {opacity:0, scale:.8, filter:'blur(10px)'});
+    G.set('.tl-line', {scaleX:0});
+    G.set('.tl-item', {opacity:0, y:i => i % 2 ? 18 : -18});
+    const pe = p => {
+      hero.style.pointerEvents = p < .12 ? 'auto' : 'none';
+      tls.style.pointerEvents = p > .3 && p < .62 ? 'auto' : 'none';
+      rest.style.pointerEvents = p > .86 ? 'auto' : 'none';
+    };
+    pe(0);
+    const tl = G.timeline({scrollTrigger:{trigger:stage, start:0, end:() => '+=' + Math.round(innerHeight * 3.2), pin:true, scrub:.8, anticipatePin:1, onUpdate:self => pe(self.progress)}});
+    indexST = tl.scrollTrigger;
+    tl.to(hero, {scale:2.1, filter:'blur(22px)', opacity:0, duration:.2, ease:'power2.in'}, 0)
+      .to('.name .ch', {yPercent:i => [-14, 0, 14][i] || 0, xPercent:i => [-30, 0, 30][i] || 0, duration:.2, ease:'power1.in'}, 0)
+      // scene 2: timeline arrives from depth, draws itself, then the camera flies through it
+      .to(tls, {opacity:1, scale:1, filter:'blur(0px)', duration:.18, ease:'power2.out'}, .13)
+      .to('.tl-line', {scaleX:1, duration:.22, ease:'none'}, .28)
+      .to('.tl-item', {opacity:1, y:0, duration:.05, stagger:.016, ease:'power2.out'}, .29)
+      .to(tls, {scale:1.9, filter:'blur(20px)', opacity:0, duration:.18, ease:'power2.in'}, .62)
+      // scene 3: featured projects
+      .to(rest, {opacity:1, scale:1, filter:'blur(0px)', duration:.18, ease:'power2.out'}, .74)
+      .to('.plate', {opacity:1, scale:1, filter:'blur(0px)', duration:.12, stagger:.025, ease:'power2.out'}, .78)
+      .to({}, {duration:.06}, .94);
+    return () => { stage.classList.remove('stacked'); indexST = null; [hero, tls, rest].forEach(el => el.style.pointerEvents = ''); };
+  });
+  // phone: no pin, each block comes forward out of the dark as it arrives
+  mm.add('(max-width: 640px)', () => {
+    G.timeline({scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:.6}})
+      .to('.hero-in', {scale:1.35, filter:'blur(14px)', opacity:0, ease:'power1.in'});
+    $$('.idx-tl .rest-head, .tl-item, .idx-rest .rest-head, .plate, .idx-foot').forEach(el => depthPass(el, 12, .82));
+    G.fromTo('.tl-line', {scaleY:0}, {scaleY:1, ease:'none', scrollTrigger:{trigger:'.tl-wrap', start:'top 80%', end:'bottom 55%', scrub:.4}});
+  });
+}
+// one element's trip through the viewport: arrives from far (small, blurred), sits sharp, leaves backward (smaller, dim)
+function depthPass(el, blur, scaleIn, leave){
+  const vh = innerHeight, h = el.offsetHeight, total = vh + h, inLen = vh * .32, outLen = vh * .3;
+  const tl = G.timeline({scrollTrigger:{trigger:el, start:'top bottom', end:'bottom top', scrub:.5}});
+  tl.fromTo(el, {scale:scaleIn, opacity:0, filter:`blur(${blur}px)`}, {scale:1, opacity:1, filter:'blur(0px)', duration:inLen, ease:'power2.out'}, 0);
+  if (leave !== false) tl.to(el, {scale:.94, opacity:.12, filter:`blur(${Math.round(blur*.6)}px)`, duration:outLen, ease:'power2.in'}, Math.max(inLen, total - outLen));
+  tl.to({}, {duration:0.0001}, total);
+}
+function setupLayer(layer){
+  const els = $$('[data-in]', layer);
+  G.killTweensOf(els);
+  G.set(els, {y:0, transformOrigin:'50% 50%'});
+  els.forEach(el => depthPass(el, 8, .9));
+  const fl = layer.querySelector('.flow-line');
+  if (fl) G.fromTo(fl, {scaleY:0}, {scaleY:1, ease:'none', scrollTrigger:{trigger:fl.parentElement, start:'top 75%', end:'bottom 70%', scrub:.4}});
+}
+
+function focusHeading(layer){ const h = layer.querySelector('[tabindex="-1"], h1'); if (h) h.focus({preventScroll:true}); }
+
+function go(next){
+  if (busy){ queued = next; return; }
+  const from = depth(cur), to = depth(next);
+  if (cur.view===next.view && cur.pid===next.pid && cur.k===next.k) return;
+  scrollMem[from] = scrollY;
+  const src = lastSrc; lastSrc = null;
+  if (!ANIM){ show(next); scrollTo(0, to < from ? scrollMem[to] : 0); cur = next; focusHeading(L[to]); return; }
+  if (booting && bootTl) bootTl.progress(1);
+  busy = true;
+  const done = () => { busy = false; cur = next; setupScroll(next.view); focusHeading(L[to]); if (queued){ const q = queued; queued = null; go(q); } };
+  const fromL = L[from], toL = L[to];
+
+  if (to > from){                       // zoom in
+    const r = rectOf(src);
+    const lr = fromL.getBoundingClientRect();
+    G.set(fromL, {transformOrigin:`${r.left + r.width/2 - lr.left}px ${r.top + r.height/2 - lr.top}px`});
+    zoomer.hidden = false;
+    G.set(zoomer, {left:r.left, top:r.top, width:r.width, height:r.height, opacity:1});
+    G.timeline({onComplete:done})
+      .to(fromL, {scale:1.08, opacity:0, filter:'blur(10px)', duration:.6, ease:'power2.in'}, 0)
+      .to(zoomer, {left:0, top:0, width:innerWidth, height:innerHeight, duration:.8, ease:'expo.inOut'}, .04)
+      .add(() => { G.set(fromL, {clearProps:'all'}); teardownScroll(); show(next); scrollTo(0,0); G.set($$('[data-in]', toL), {opacity:0}); })
+      .add(scanTween())
+      .add(() => revealIn(toL), '-=.6')
+      .to(zoomer, {opacity:0, duration:.45, onComplete:()=>{ zoomer.hidden = true; }}, '<');
+  } else if (to < from){                // zoom out
+    let r;
+    zoomer.hidden = false;
+    G.set(zoomer, {left:0, top:0, width:innerWidth, height:innerHeight, opacity:0});
+    G.timeline({onComplete:done})
+      .to(zoomer, {opacity:1, duration:.25}, 0)
+      .to(fromL, {scale:.94, opacity:0, filter:'blur(8px)', duration:.45, ease:'power2.in'}, 0)
+      .add(() => {
+        G.set(fromL, {clearProps:'all'}); teardownScroll(); show(next); setupScroll(next.view); scrollTo(0, scrollMem[to]);
+        const back = to===0 ? (cur.pid ? $(`[data-plate="${cur.pid}"]`) : null) : to===1 ? (cur.pid ? $(`[data-row="${cur.pid}"]`, toL) : null) : $(`[data-dec="${cur.k}"]`, toL);
+        r = rectOf(back);
+        const lr = toL.getBoundingClientRect();
+        G.set(toL, {transformOrigin:`${r.left + r.width/2 - lr.left}px ${r.top + r.height/2 - lr.top}px`, scale:1.08, opacity:0, filter:'blur(10px)'});
+      })
+      .to(zoomer, {left:()=>r.left, top:()=>r.top, width:()=>r.width, height:()=>r.height, duration:.8, ease:'expo.inOut'})
+      .to(toL, {scale:1, opacity:1, filter:'blur(0px)', duration:.75, ease:'expo.out', clearProps:'all'}, '<.1')
+      .to(zoomer, {opacity:0, duration:.35, onComplete:()=>{ zoomer.hidden = true; }}, '-=.25');
+  } else {                               // lateral
+    G.timeline({onComplete:done})
+      .to(fromL, {opacity:0, x:-40, duration:.4, ease:'power2.in'})
+      .add(() => { G.set(fromL, {clearProps:'all'}); teardownScroll(); show(next); scrollTo(0,0); G.set($$('[data-in]', toL), {opacity:0}); })
+      .add(scanTween())
+      .add(() => revealIn(toL), '-=.65');
+  }
+}
+
+addEventListener('hashchange', () => go(parse(location.hash)));
+$('#back').addEventListener('click', () => {
+  const t = parentHash(cur);
+  location.hash = t === '#' ? '' : t;
+});
+addEventListener('keydown', e => { if (e.key === 'Escape' && cur.view !== 'index') $('#back').click(); });
+
+/* ── pointer light + metal ── */
+const name = $('#name');
+addEventListener('pointermove', e => {
+  const x = e.clientX / innerWidth, y = e.clientY / innerHeight;
+  document.documentElement.style.setProperty('--mx', `${e.clientX}px`);
+  document.documentElement.style.setProperty('--my', `${e.clientY}px`);
+  if (ANIM && !booting) G.to(name, {'--bx': `${15 + x*70}%`, duration:.9, ease:'power3.out', overwrite:'auto'});
+}, {passive:true});
+
+/* magnetic plates */
+if (ANIM && matchMedia('(hover:hover)').matches){
+  $$('.plate').forEach(pl => {
+    pl.addEventListener('pointermove', e => {
+      const r = pl.getBoundingClientRect();
+      G.to(pl, {x:(e.clientX - r.left - r.width/2)*.05, y:(e.clientY - r.top - r.height/2)*.05, duration:.4, ease:'power3.out'});
+    });
+    pl.addEventListener('pointerleave', () => G.to(pl, {x:0, y:0, duration:.6, ease:'elastic.out(1,.5)'}));
+  });
+}
+
+/* ── boot ── */
+let booting = false, bootTl = null;
+cur = parse(location.hash);
+show(cur);
+if (ANIM && cur.view === 'index'){
+  booting = true;
+  scrollTo(0,0);
+  document.documentElement.style.overflow = 'hidden';
+  const skip = () => { if (booting && bootTl) bootTl.progress(1); };
+  ['wheel','touchstart','keydown'].forEach(t => addEventListener(t, skip, {once:true, passive:true}));
+  G.set(name, {'--bx':'0%'});
+  bootTl = G.timeline({onComplete:()=>{ booting = false; document.documentElement.style.overflow = ''; setupScroll('index'); }});
+  bootTl
+    .from('[data-hair]', {scaleX:0, opacity:0, duration:.8, ease:'expo.out'})
+    .add(scanTween(), .25)
+    .from('.name .ch', {yPercent:70, opacity:0, filter:'blur(22px)', scale:1.18, duration:1.2, stagger:.13, ease:'expo.out'}, .35)
+    .to(name, {'--bx':'100%', duration:1.8, ease:'power2.inOut'}, .9)
+    .to(name, {'--bx':'50%', duration:.9, ease:'power2.out'})
+    .add(playHeadline(), 1.05)
+    .from('[data-boot]', {opacity:0, y:14, duration:.7, stagger:.08, ease:'expo.out'}, 1.6)
+    .from('.cue .tick', {scaleY:0, duration:.8, ease:'expo.out'}, 2.1);
+} else {
+  setupScroll(cur.view);
+}
+</script>
+</html>

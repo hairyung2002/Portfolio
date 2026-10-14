@@ -1,89 +1,102 @@
 import type { Metadata } from "next";
-import { profile, otherProjects } from "@/content/profile";
-import { Section } from "@/components/Section";
+import { aboutActivities, type DatedItem } from "@/content/activities";
+import { awards, education, stack, talks } from "@/content/about";
+import { profile } from "@/content/profile";
+import { DepthScene } from "@/components/DepthScene";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "학력, 활동 이력, 수상, 발표 세션과 그 외 프로젝트 목록.",
+  description: "학력, 활동, 발표, 수상, 기술, 연락처.",
 };
+
+function Items({ items }: { items: DatedItem[] }) {
+  return (
+    <ul>
+      {items.map((i) => (
+        <li key={`${i.when}-${i.what}`}>
+          <span className="when">{i.when}</span>
+          <span className="what">
+            {i.what}
+            {i.sub && <span className="sub">{i.sub}</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Block({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="ablock" data-in>
+      <h2>{title}</h2>
+      {children}
+    </section>
+  );
+}
 
 export default function AboutPage() {
   return (
-    <div className="rail-x mx-auto flex max-w-3xl flex-col gap-2 px-6 py-16 sm:py-20">
-      <div className="mb-6 flex flex-col gap-2 border-b border-border pb-8">
-        <span className="font-mono text-xs tracking-[0.15em] text-ink-muted uppercase">Profile</span>
-        <h1 className="text-3xl font-bold text-ink">About</h1>
-      </div>
-
-      <Section title="Education" index={1} first>
-        <ul className="flex flex-col gap-1 text-[15px] leading-relaxed">
-          {profile.education.map((edu) => (
-            <li key={edu.school}>
-              <p className="font-semibold text-ink">{edu.school}</p>
-              <p className="text-ink-muted">{edu.major}</p>
-              <p className="text-[13px] text-ink-muted">{edu.period}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title="Stack" index={2}>
-        <p className="mb-3 text-sm text-ink-muted">
-          각 기술을 왜 선택했는지는 프로젝트 상세의 Decisions에서 확인할 수 있습니다.
+    <section className="layer" aria-label="소개">
+      <DepthScene>
+        <p className="eyebrow" data-in>
+          ABOUT
         </p>
-        <dl className="flex flex-col gap-3 text-[13px]">
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <dt className="w-16 shrink-0 whitespace-nowrap text-ink-muted sm:w-20">능숙</dt>
-            <dd className="font-mono text-ink">{profile.stack.proficient.join(" · ")}</dd>
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <dt className="w-16 shrink-0 whitespace-nowrap text-ink-muted sm:w-20">사용 가능</dt>
-            <dd className="font-mono text-ink">{profile.stack.capable.join(" · ")}</dd>
-          </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <dt className="w-16 shrink-0 whitespace-nowrap text-ink-muted sm:w-20">학습 중</dt>
-            <dd className="font-mono text-ink">{profile.stack.learning.join(" · ")}</dd>
-          </div>
-        </dl>
-      </Section>
-
-      <Section title="Activities" index={3}>
-        <ul className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink-muted">
-          {profile.activities.map((a) => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title="Awards" index={4}>
-        <ul className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink-muted">
-          {profile.awards.map((a) => (
-            <li key={a}>{a}</li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title="Speaking" index={5}>
-        <div className="flex flex-col gap-1 text-[15px] leading-relaxed">
-          <p className="font-semibold text-ink">{profile.speaking.title}</p>
-          <p className="text-[13px] text-ink-muted">
-            {profile.speaking.event} · <span className="font-mono">{profile.speaking.date}</span> ·{" "}
-            <span className="text-accent">{profile.speaking.status}</span>
-          </p>
+        <h1 className="lhead metal" data-in tabIndex={-1}>
+          About
+        </h1>
+        <div className="ablocks">
+          <Block title="학력">
+            <Items items={education} />
+          </Block>
+          <Block title="활동">
+            <Items items={aboutActivities} />
+          </Block>
+          <Block title="발표">
+            <Items items={talks} />
+          </Block>
+          <Block title="수상">
+            <Items items={awards} />
+          </Block>
+          <Block title="기술">
+            <dl className="stack">
+              {stack.map((s) => (
+                <div key={s.level}>
+                  <dt>{s.level}</dt>
+                  <dd>{s.items}</dd>
+                </div>
+              ))}
+            </dl>
+          </Block>
+          <Block title="연락">
+            <ul>
+              <li>
+                <span className="when">Email</span>
+                <span className="what">
+                  <a className="contact-mail" href={`mailto:${profile.contact.email}`}>
+                    {profile.contact.email}
+                  </a>
+                </span>
+              </li>
+              <li>
+                <span className="when">GitHub</span>
+                <span className="what">
+                  <a href={profile.contact.github} target="_blank" rel="noopener noreferrer">
+                    github.com/hairyung2002 ↗
+                  </a>
+                </span>
+              </li>
+              <li>
+                <span className="when">Blog</span>
+                <span className="what">
+                  <a href={profile.contact.blog} target="_blank" rel="noopener noreferrer">
+                    velog.io/@hairyung2002 ↗
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </Block>
         </div>
-        <p className="mt-4 text-sm text-ink-muted">{profile.blogNote}</p>
-      </Section>
-
-      <Section title="그 외 프로젝트" index={6}>
-        <ul className="flex flex-col gap-2 text-sm leading-relaxed">
-          {otherProjects.map((p) => (
-            <li key={p.name}>
-              <span className="font-semibold text-ink">{p.name}</span>
-              <span className="text-ink-muted"> — {p.summary}</span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-    </div>
+      </DepthScene>
+    </section>
   );
 }
